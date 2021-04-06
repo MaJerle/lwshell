@@ -1,4 +1,4 @@
-/**
+﻿/**
  * \file            lwshell.h
  * \brief           Lightweight shell
  */
@@ -35,7 +35,6 @@
 #define LWSHELL_HDR_H
 
 #include <stdint.h>
-#include <limits.h>
 #include "lwshell/lwshell_opt.h"
 
 #ifdef __cplusplus
@@ -63,13 +62,16 @@ typedef enum {
 } lwshellr_t;
 
 /**
+ *
+ */
+typedef int32_t(*lwshell_cmd_fn)(int32_t argc, const char** argv);
+
+/**
  * \brief           LwSHELL main structure
  */
 typedef struct lwshell {
     uint8_t res;
 } lwshell_t;
-
-
 
 /**
  * \}

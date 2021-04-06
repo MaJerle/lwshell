@@ -31,11 +31,17 @@
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
  * Version:         $_version_$
  */
-#include <limits.h>
 #include <string.h>
 #include "lwshell/lwshell.h"
 
-#define LWSHELL_MEMSET                    memset
-#define LWSHELL_MEMCPY                    memcpy
-#define LWSHELL_MEMMOVE                   memmove
+/**
+ * \brief           Shell command structure
+ */
+typedef struct {
+    lwshell_cmd_fn cmd_fn;                      /*!< Command function to call on match */
+    char cmd_name[LWSHELL_CFG_MAX_CMD_NAME_LEN + 1];    /*!< Command name to search for match */
+} lwshell_cmd_t;
 
+/* Array of all commands */
+static lwshell_cmd_t cmds[LWSHELL_CFG_MAX_CMDS];
+static size_t cmds_cnt;

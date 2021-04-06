@@ -53,54 +53,38 @@ extern "C" {
  */
 
 /**
- * \brief           Enables `1` or disables `0` operating system support in the library
+ * \brief           Maximum number of different commands to be registered
  *
- * \note            When `LWSHELL_CFG_OS` is enabled, user must implement functions in \ref LWSHELL_SYS group.
  */
-#ifndef LWSHELL_CFG_OS
-#define LWSHELL_CFG_OS                            0
+#ifndef LWSHELL_CFG_MAX_CMDS
+#define LWSHELL_CFG_MAX_CMDS                    8
 #endif
 
 /**
- * \brief           Mutex handle type
+ * \brief           Maximum characters for command line length.
  *
- * \note            This value must be set in case \ref LWSHELL_CFG_OS is set to `1`.
- *                  If data type is not known to compiler, include header file with
- *                  definition before you define handle type
+ * This includes new line character and trailing zero.
+ * Commands longer than this are automatically discarded
  */
-#ifndef LWSHELL_CFG_OS_MUTEX_HANDLE
-#define LWSHELL_CFG_OS_MUTEX_HANDLE               void *
+#ifndef LWSHELL_CFG_MAX_CMD_LEN
+#define LWSHELL_CFG_MAX_CMD_LEN                 128
 #endif
 
 /**
- * \brief           Number of bits to align memory address and memory size
+ * \brief           Maximum characters for command name
  *
- * Some CPUs do not offer unaligned memory access (Cortex-M0 as an example)
- * therefore it is important to have alignment of data addresses and potentialy length of data
- *
- * \note            This value must be a power of `2` for number of bytes.
- *                  Usually alignment of `4` bytes fits to all processors.
  */
-#ifndef LWSHELL_CFG_ALIGN_NUM
-#define LWSHELL_CFG_ALIGN_NUM                     ((size_t)4)
+#ifndef LWSHELL_CFG_MAX_CMD_NAME_LEN
+#define LWSHELL_CFG_MAX_CMD_NAME_LEN            16
 #endif
 
 /**
- * \brief           Enables `1` or disables `0` memory cleanup on free operation (or realloc).
+ * \brief           Maximum number of parameters accepted by command.
  *
- * It resets unused memory to `0x00` and prevents other applications seeing old data.
- * It is disabled by default since it has performance penalties.
- * /
-#ifndef LWSHELL_CFG_CLEAN_MEMORY
-#define LWSHELL_CFG_CLEAN_MEMORY                  0
-#endif
-
-/**
- * \brief           Enables `1` or disables `0` statistics in the library
- *
+ * Number includes command name itself
  */
-#ifndef LWSHELL_CFG_ENABLE_STATS
-#define LWSHELL_CFG_ENABLE_STATS                  0
+#ifndef LWSHELL_CFG_MAX_CMD_ARGS
+#define LWSHELL_CFG_MAX_CMD_ARGS                8
 #endif
 
 /**
