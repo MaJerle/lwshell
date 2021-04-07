@@ -178,8 +178,20 @@ lwshell_init(void) {
     return lwshellOK;
 }
 
+/**
+ * \brief           Register new command to shell
+ * \param[in]       cmd_name: Command name. This one is used when entering shell command
+ * \param[in]       cmd_fn: Function to call on command match
+ * \param[in]       desc: Custom command description
+ * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ */
 lwshellr_t
 lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc) {
+    if (cmd_name == NULL || cmd_fn == NULL
+        || strlen(cmd_name) == 0) {
+        return lwshellERRPAR;
+    }
+
     /* Check for memory available */
     if (cmds_cnt < LWSHELL_ARRAYSIZE(cmds)) {
         cmds[cmds_cnt].name = cmd_name;
