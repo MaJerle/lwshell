@@ -13,7 +13,14 @@ addint_cmd(int32_t argc, char** argv) {
 }
 
 int
-main(void) {
+main(int argc, char** argv) {
+    printf("Program started...\r\n");
+    printf("ARGC: %d\r\n", argc);
+    for (size_t i = 0; i < argc; ++i) {
+        printf("ARGV %d: %s\r\n", i, argv[i]);
+    }
+    printf("\r\n");
+
     lwshell_init();
     lwshell_register_cmd("addint", addint_cmd, "Adds int between 2 arguments");
 
