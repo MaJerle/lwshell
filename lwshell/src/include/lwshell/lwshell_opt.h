@@ -61,13 +61,13 @@ extern "C" {
 #endif
 
 /**
- * \brief           Maximum characters for command line length.
+ * \brief           Maximum characters for command line input
  *
  * This includes new line character and trailing zero.
  * Commands longer than this are automatically discarded
  */
-#ifndef LWSHELL_CFG_MAX_CMD_LEN
-#define LWSHELL_CFG_MAX_CMD_LEN                 128
+#ifndef LWSHELL_CFG_MAX_INPUT_LEN
+#define LWSHELL_CFG_MAX_INPUT_LEN               128
 #endif
 
 /**

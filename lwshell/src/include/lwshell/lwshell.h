@@ -59,19 +59,28 @@ extern "C" {
  */
 typedef enum {
     lwshellOK = 0x00,                           /*!< Everything OK */
+    lwshellERRPAR,                              /*!< Parameter error */
+    lwshellERRMEM,                              /*!< Memory error */
 } lwshellr_t;
 
 /**
  *
  */
-typedef int32_t(*lwshell_cmd_fn)(int32_t argc, const char** argv);
+typedef int32_t(*lwshell_cmd_fn)(int32_t argc, char** argv);
 
 /**
  * \brief           LwSHELL main structure
  */
 typedef struct lwshell {
-    uint8_t res;
+    char buff[LWSHELL_CFG_MAX_INPUT_LEN + 1];   /*!< Shell command input buffer */
+    size_t buff_ptr;                            /*!< Buffer pointer for input */
+    int32_t argc;                               /*!< Number of arguments parsed in command */
+    char* argv[LWSHELL_CFG_MAX_CMD_ARGS];       /*!< Array of all arguments */
 } lwshell_t;
+
+lwshellr_t  lwshell_init(void);
+lwshellr_t  lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
+lwshellr_t  lwshell_input(const void* in_data, size_t len);
 
 /**
  * \}
