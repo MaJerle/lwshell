@@ -32,19 +32,14 @@
  * Version:         $_version_$
  */
 #include <string.h>
-#include <stdio.h>
 #include "lwshell/lwshell.h"
 
 /* Default characters */
 #define LWSHELL_ASCII_NULL                      0x00    /*!< Null character */
-#define LWSHELL_ASCII_BELL                      0x07    /*!< Bell (\a) */
 #define LWSHELL_ASCII_BACKSPACE                 0x08    /*!< Backspace */
-#define LWSHELL_ASCII_TAB                       0x09    /*!< Horizontal tab */
 #define LWSHELL_ASCII_LF                        0x0A    /*!< Line feed */
 #define LWSHELL_ASCII_CR                        0x0D    /*!< Carriage return */
-#define LWSHELL_ASCII_ESC                       0x1B    /*!< Escape */
 #define LWSHELL_ASCII_DEL                       0x7F    /*!< Delete character */
-#define LWSHELL_ASCII_US                        0x1F    /*!< Unit separator */
 #define LWSHELL_ASCII_SPACE                     0x20    /*!< Space character */
 
 /**
@@ -142,7 +137,12 @@ prv_parse_input(lwshell_t* lw) {
                 }
             } else {
                 lw->argv[lw->argc++] = str;         /* Set start of argument directly on character */
-                while ((*str != ' ' && *str != '\0') && ++str) {}
+                while ((*str != ' ' && *str != '\0')) {
+                    if (*str == '"') {              /* Quote should not be here... */
+                        *str = '\0';                /* ...add NULL termination to end token */
+                    }
+                    ++str;
+                }
                 *str = '\0';
                 ++str;
             }
@@ -162,8 +162,6 @@ prv_parse_input(lwshell_t* lw) {
                 }
             }
         }
-    } else {
-        printf("Invalid input\r\n");
     }
 }
 
