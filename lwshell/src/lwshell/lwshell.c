@@ -155,10 +155,23 @@ prv_parse_input(lwshell_t* lw) {
 
         /* Check for command */
         if (lw->argc > 0 && cmds_cnt > 0) {
+            lwshell_cmd_t* c = NULL;
             /* Process all commands */
             for (size_t i = 0; i < cmds_cnt; ++i) {
-                if (strcmp(cmds[i].name, lw->argv[0]) == 0) {
-                    cmds[i].fn(lw->argc, lw->argv);
+                if (strncmp(cmds[i].name, lw->argv[0], strlen(lw->argv[0])) == 0) {
+                    c = &cmds[i];
+                    break;
+                }
+            }
+
+            /* Valid command ready? */
+            if (c != NULL) {
+                if (lw->argc == 2
+                    && lw->argv[1][0] == '-' && lw->argv[1][1] == 'h') {
+                    /* Here we can print version */
+                    printf("%s\r\n", c->desc);
+                } else {
+                    c->fn(lw->argc, lw->argv);
                 }
             }
         }

@@ -35,6 +35,7 @@
 #define LWSHELL_HDR_H
 
 #include <stdint.h>
+#include <stdlib.h>
 #include "lwshell/lwshell_opt.h"
 
 #ifdef __cplusplus
@@ -81,6 +82,34 @@ typedef struct lwshell {
 lwshellr_t  lwshell_init(void);
 lwshellr_t  lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
 lwshellr_t  lwshell_input(const void* in_data, size_t len);
+
+/**
+ * \brief           Parse input string as `integer`
+ * \param[in]       str: String to parse
+ * \return          String parsed as integer
+ */
+#define lwshell_parse_int(str)              atoi(str)
+
+/**
+ * \brief           Parse input string as `double`
+ * \param[in]       str: String to parse
+ * \return          String parsed as `double`
+ */
+#define lwshell_parse_double(str)           atof(str)
+
+/**
+ * \brief           Parse input string as `long`
+ * \param[in]       str: String to parse
+ * \return          String parsed as `long`
+ */
+#define lwshell_parse_long(str)             atol(str)
+
+/**
+ * \brief           Parse input string as `long long`
+ * \param[in]       str: String to parse
+ * \return          String parsed as `long long`
+ */
+#define lwshell_parse_long_long(str)        atoll(str)
 
 /**
  * \}
