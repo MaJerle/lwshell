@@ -65,9 +65,12 @@ typedef enum {
 } lwshellr_t;
 
 /**
- *
+ * \brief           Command function prototype
+ * \param[in]       argc: Number of arguments
+ * \param[in]       argv: Pointer to arguments
+ * \return          `0` on success, `-1` otherwise
  */
-typedef int32_t(*lwshell_cmd_fn)(int32_t argc, char** argv);
+typedef int32_t (*lwshell_cmd_fn)(int32_t argc, char** argv);
 
 /**
  * \brief           LwSHELL main structure
