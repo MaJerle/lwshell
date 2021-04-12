@@ -55,6 +55,19 @@ subdbl_cmd(int32_t argc, char** argv) {
     return 0;
 }
 
+/**
+ * \brief           Application output function
+ * \param[in]       str: String to print, null-terminated
+ * \param[in]       lw: LwSHELL instance
+ */
+void
+shell_output(const char* str, lwshell_t* lw) {
+    printf("%s", str);
+    if (*str == '\r') {
+        printf("\n");
+    }
+}
+
 int
 main(int argc, char** argv) {
     printf("Program started...\r\n");
@@ -64,7 +77,11 @@ main(int argc, char** argv) {
     }
     printf("\r\n");
 
+    /* Init library */
     lwshell_init();
+    lwshell_set_output_fn(shell_output);
+
+    /* Define shell commands */
     lwshell_register_cmd("addint", addint_cmd, "Adds 2 integer numbers and prints them");
     lwshell_register_cmd("subint", subint_cmd, "Substitute 2 integer numbers and prints them");
     lwshell_register_cmd("adddbl", adddbl_cmd, "Adds 2 double numbers and prints them");
@@ -74,6 +91,7 @@ main(int argc, char** argv) {
     printf("Start entering your text and press enter...\r\n");
     while (1) {
         char c = getch();
+#if 0
         if (c == '\b') {
             printf("\b \b");
         } else {
@@ -82,6 +100,7 @@ main(int argc, char** argv) {
         if (c == '\r') {
             printf("\n");
         }
+#endif
 
         /* Now insert input */
         lwshell_input(&c, 1);

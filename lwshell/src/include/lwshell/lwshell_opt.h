@@ -88,6 +88,16 @@ extern "C" {
 #endif
 
 /**
+ * \brief           Enables `1` or disables `0` output function to
+ *                  print data from library to application.
+ *
+ * This is useful to give library feedback to user
+ */
+#ifndef LWSHELL_CFG_USE_OUTPUT
+#define LWSHELL_CFG_USE_OUTPUT                  1
+#endif
+
+/**
  * \}
  */
 

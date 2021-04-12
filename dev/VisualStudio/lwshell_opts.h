@@ -38,9 +38,6 @@
 
 #include "windows.h"
 
-/*
- * Open "include/lwshell/lwshell_opt.h" and
- * copy & replace here settings you want to change values
- */
+#define LWSHELL_CFG_USE_OUTPUT          1
 
 #endif /* LWSHELL_HDR_OPTS_H */

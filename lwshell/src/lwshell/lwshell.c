@@ -42,6 +42,12 @@
 #define LWSHELL_ASCII_DEL                       0x7F    /*!< Delete character */
 #define LWSHELL_ASCII_SPACE                     0x20    /*!< Space character */
 
+#if LWSHELL_CFG_USE_OUTPUT
+#define LW_OUTPUT(lw, str)          do { if ((lw)->out_fn != NULL && (str) != NULL) { (lw)->out_fn((str), (lw)); }} while (0)
+#else
+#define LW_OUTPUT(lw, str)
+#endif
+
 /**
  * \brief           Shell command structure
  */
@@ -167,9 +173,10 @@ prv_parse_input(lwshell_t* lw) {
             /* Valid command ready? */
             if (c != NULL) {
                 if (lw->argc == 2
-                    && lw->argv[1][0] == '-' && lw->argv[1][1] == 'h') {
+                    && lw->argv[1][0] == '-' && lw->argv[1][1] == 'h' && lw->argv[1][2] == '\0') {
                     /* Here we can print version */
-                    printf("%s\r\n", c->desc);
+                    LW_OUTPUT(lw, c->desc);
+                    LW_OUTPUT(lw, "\r\n");
                 } else {
                     c->fn(lw->argc, lw->argv);
                 }
@@ -180,6 +187,8 @@ prv_parse_input(lwshell_t* lw) {
 
 /**
  * \brief           Initialize shell interface
+ * \param[in]       out_fn: Output function to print library data. 
+ *                      Set to `NULL` if not used
  * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
  */
 lwshellr_t
@@ -188,6 +197,23 @@ lwshell_init(void) {
     memset(lw, 0x00, sizeof(*lw));
     return lwshellOK;
 }
+
+#if LWSHELL_CFG_USE_OUTPUT || __DOXYGEN__
+
+/**
+ * \brief           Set output function to use to print data from library to user
+ * \param[in]       out_fn: Output function to print library data.
+ *                      Set to `NULL` to disable the feature
+ * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ */
+lwshellr_t
+lwshell_set_output_fn(lwshell_output_fn out_fn) {
+    lwshell_t* lw = LWSHELL_GET_LW(NULL);
+    lw->out_fn = out_fn;
+    return lwshellOK;
+}
+
+#endif /* LWSHELL_CFG_USE_OUTPUT || __DOXYGEN__ */
 
 /**
  * \brief           Register new command to shell
@@ -234,11 +260,13 @@ lwshell_input(const void* in_data, size_t len) {
     for (size_t i = 0; i < len; ++i) {
         switch (d[i]) {
             case LWSHELL_ASCII_CR: {
+                LW_OUTPUT(lw, "\r");
                 prv_parse_input(lw);
                 LWSHELL_RESET_BUFF(lw);
                 break;
             }
             case LWSHELL_ASCII_LF: {
+                LW_OUTPUT(lw, "\n");
                 prv_parse_input(lw);
                 LWSHELL_RESET_BUFF(lw);
                 break;
@@ -248,10 +276,13 @@ lwshell_input(const void* in_data, size_t len) {
                 if (lw->buff_ptr > 0) {
                     lw->buff[lw->buff_ptr] = '\0';
                     --lw->buff_ptr;
+                    LW_OUTPUT(lw, "\b \b");
                 }
                 break;
             }
             default: {
+                char str[2] = { d[i] };
+                LW_OUTPUT(lw, str);
                 if (d[i] >= 0x20 && d[i] < 0x7F) {
                     LWSHELL_ADD_CH(lw, d[i]);
                 }

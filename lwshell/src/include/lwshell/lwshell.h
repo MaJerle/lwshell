@@ -64,6 +64,9 @@ typedef enum {
     lwshellERRMEM,                              /*!< Memory error */
 } lwshellr_t;
 
+/* Forward declaration */
+struct lwshell;
+
 /**
  * \brief           Command function prototype
  * \param[in]       argc: Number of arguments
@@ -73,9 +76,17 @@ typedef enum {
 typedef int32_t (*lwshell_cmd_fn)(int32_t argc, char** argv);
 
 /**
+ * \brief           Callback function for character output
+ * \param[in]       str: String to output
+ * \param[in]       lw: LwSHELL instance
+ */
+typedef void (*lwshell_output_fn)(const char* str, struct lwshell* lw);
+
+/**
  * \brief           LwSHELL main structure
  */
 typedef struct lwshell {
+    lwshell_output_fn out_fn;                   /*!< Optional output function */
     char buff[LWSHELL_CFG_MAX_INPUT_LEN + 1];   /*!< Shell command input buffer */
     size_t buff_ptr;                            /*!< Buffer pointer for input */
     int32_t argc;                               /*!< Number of arguments parsed in command */
@@ -83,6 +94,7 @@ typedef struct lwshell {
 } lwshell_t;
 
 lwshellr_t  lwshell_init(void);
+lwshellr_t  lwshell_set_output_fn(lwshell_output_fn out_fn);
 lwshellr_t  lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
 lwshellr_t  lwshell_input(const void* in_data, size_t len);
 
