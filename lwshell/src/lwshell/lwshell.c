@@ -29,7 +29,7 @@
  * This file is part of LwSHELL - Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         $_version_$
+ * Version:         v0.1.0
  */
 #include <string.h>
 #include "lwshell/lwshell.h"
@@ -109,7 +109,7 @@ prv_parse_input(lwshell_t* lw) {
         /* Process complete input */
         prev_ch = '\0';
         str = lw->buff;
-        
+
         /* Process complete string */
         lw->argc = 0;
         while (*str != '\0') {
