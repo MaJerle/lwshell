@@ -55,9 +55,6 @@ typedef struct {
     lwshell_cmd_fn fn;                          /*!< Command function to call on match */
     const char* name;                           /*!< Command name to search for match */
     const char* desc;                           /*!< Command description for help */
-#if 0
-    char cmd_name[LWSHELL_CFG_MAX_CMD_NAME_LEN + 1];    
-#endif /* 0 */
 } lwshell_cmd_t;
 
 /* Array of all commands */
@@ -65,11 +62,10 @@ static lwshell_cmd_t cmds[LWSHELL_CFG_MAX_CMDS];
 static size_t cmds_cnt;
 static lwshell_t shell;
 
-/**
- * \brief           Get shell from input
- */
+/* Get shell instance from input */
 #define LWSHELL_GET_LW(lw)          ((lw) != NULL ? (lw) : (&shell))
 
+ /* Add character to instance */
 #define LWSHELL_ADD_CH(lw, ch)      do {            \
     if ((lw)->buff_ptr < (LWSHELL_ARRAYSIZE(lw->buff) - 1)) {   \
         (lw)->buff[(lw)->buff_ptr] = ch;            \
@@ -77,6 +73,7 @@ static lwshell_t shell;
     }                                               \
 } while (0)
 
+/* Reset buffers */
 #define LWSHELL_RESET_BUFF(lw)      do {            \
     memset((lw)->buff, 0x00, sizeof((lw)->buff));   \
     memset((lw)->argv, 0x00, sizeof((lw)->argv));   \
@@ -187,8 +184,6 @@ prv_parse_input(lwshell_t* lw) {
 
 /**
  * \brief           Initialize shell interface
- * \param[in]       out_fn: Output function to print library data. 
- *                      Set to `NULL` if not used
  * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
  */
 lwshellr_t

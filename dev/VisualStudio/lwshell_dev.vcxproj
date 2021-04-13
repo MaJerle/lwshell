@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\examples\example_minimal.c" />
     <ClCompile Include="..\..\lwshell\src\lwshell\lwshell.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>

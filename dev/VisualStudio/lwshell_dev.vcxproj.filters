@@ -19,5 +19,8 @@
     <ClCompile Include="..\..\lwshell\src\lwshell\lwshell.c">
       <Filter>Source Files\LWSHELL</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\examples\example_minimal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

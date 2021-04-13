@@ -16,19 +16,21 @@ LwSHELL is lightweight dynamic memory manager optimized for embedded systems.
 Features
 ^^^^^^^^
 
-* Written in ANSI C99, compatible with ``size_t`` for size data types
-* Platform indenepdent
-* Implements simple shell interface targeting embedded systems
+* Lightweight commands shell for embedded systems
+* Platform independent and very easy to port
+
+    * Development of library under Win32 platform
+* Written in C language (C99)
+* No dynamic allocation, maximum number of commands assigned at compile time
 * Highly configurable
-* Includes number parsers for integers
-* Operating system ready
+* Simple help-text with `cmd -v` option
 * User friendly MIT license
 
 Requirements
 ^^^^^^^^^^^^
 
 * C compiler
-* Less than ``2kB`` of non-volatile memory
+* Less than ``5kB`` of non-volatile memory
 
 Contribute
 ^^^^^^^^^^

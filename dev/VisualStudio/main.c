@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdint.h>
 
+void    example_minimal(void);
+
 int32_t
 addint_cmd(int32_t argc, char** argv) {
     long long i1, i2;
@@ -68,17 +70,13 @@ shell_output(const char* str, lwshell_t* lw) {
     }
 }
 
+/* Program entry point */
 int
-main(int argc, char** argv) {
-    printf("Program started...\r\n");
-    printf("ARGC: %d\r\n", argc);
-    for (size_t i = 0; i < argc; ++i) {
-        printf("ARGV %d: %s\r\n", i, argv[i]);
-    }
-    printf("\r\n");
-
+main(void) {
     /* Init library */
     lwshell_init();
+
+    /* Add optional output function for the purpose of the feedback */
     lwshell_set_output_fn(shell_output);
 
     /* Define shell commands */
@@ -88,21 +86,11 @@ main(int argc, char** argv) {
     lwshell_register_cmd("subdbl", subdbl_cmd, "Substitute 2 double numbers and prints them");
 
     /* User input to process every character */
-    printf("Start entering your text and press enter...\r\n");
+    printf("Start entering your command and press enter...\r\n");
     while (1) {
         char c = getch();
-#if 0
-        if (c == '\b') {
-            printf("\b \b");
-        } else {
-            printf("%c", c);
-        }
-        if (c == '\r') {
-            printf("\n");
-        }
-#endif
 
-        /* Now insert input */
+        /* Insert input to library */
         lwshell_input(&c, 1);
     }
     return 0;

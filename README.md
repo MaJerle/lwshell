@@ -7,11 +7,13 @@ It targets communication with embedded systems from remote terminal to quickly s
 
 ## Features
 
-* Lightweight commands shell for embedded systems 
+* Lightweight commands shell for embedded systems
 * Platform independent and very easy to port
     * Development of library under Win32 platform
 * Written in C language (C99)
 * No dynamic allocation, maximum number of commands assigned at compile time
+* Highly configurable
+* Simple help-text with `cmd -v` option
 * User friendly MIT license
 
 ## Contribute

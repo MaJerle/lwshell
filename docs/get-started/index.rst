@@ -97,7 +97,7 @@ Minimal example code
 To verify proper library setup, minimal example has been prepared.
 Run it in your main application file to verify its proper execution
 
-.. literalinclude:: ../examples_src/example_minimal.c
+.. literalinclude:: ../../examples/example_minimal.c
     :language: c
     :linenos:
     :caption: Absolute minimum example
