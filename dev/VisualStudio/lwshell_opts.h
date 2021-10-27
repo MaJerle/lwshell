@@ -29,7 +29,7 @@
  * This file is part of Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v0.1.0
+ * Version:         v1.0.0
  */
 #ifndef LWSHELL_HDR_OPTS_H
 #define LWSHELL_HDR_OPTS_H
