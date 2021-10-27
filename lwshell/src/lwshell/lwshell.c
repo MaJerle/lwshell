@@ -161,7 +161,8 @@ prv_parse_input(lwshell_t* lw) {
             lwshell_cmd_t* c = NULL;
             /* Process all commands */
             for (size_t i = 0; i < cmds_cnt; ++i) {
-                if (strncmp(cmds[i].name, lw->argv[0], strlen(lw->argv[0])) == 0) {
+                if (strlen(lw->argv[0]) == strlen(cmds[i].name)
+                    && strncmp(cmds[i].name, lw->argv[0], strlen(lw->argv[0])) == 0) {
                     c = &cmds[i];
                     break;
                 }
