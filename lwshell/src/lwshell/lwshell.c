@@ -35,12 +35,12 @@
 #include "lwshell/lwshell.h"
 
 /* Default characters */
-#define LWSHELL_ASCII_NULL                      0x00    /*!< Null character */
-#define LWSHELL_ASCII_BACKSPACE                 0x08    /*!< Backspace */
-#define LWSHELL_ASCII_LF                        0x0A    /*!< Line feed */
-#define LWSHELL_ASCII_CR                        0x0D    /*!< Carriage return */
-#define LWSHELL_ASCII_DEL                       0x7F    /*!< Delete character */
-#define LWSHELL_ASCII_SPACE                     0x20    /*!< Space character */
+#define LWSHELL_ASCII_NULL                      0x00/*!< Null character */
+#define LWSHELL_ASCII_BACKSPACE                 0x08/*!< Backspace */
+#define LWSHELL_ASCII_LF                        0x0A/*!< Line feed */
+#define LWSHELL_ASCII_CR                        0x0D/*!< Carriage return */
+#define LWSHELL_ASCII_DEL                       0x7F/*!< Delete character */
+#define LWSHELL_ASCII_SPACE                     0x20/*!< Space character */
 
 #if LWSHELL_CFG_USE_OUTPUT
 #define LW_OUTPUT(lw, str)          do { if ((lw)->out_fn != NULL && (str) != NULL) { (lw)->out_fn((str), (lw)); }} while (0)
@@ -121,7 +121,7 @@ prv_parse_input(lwshell_t* lw) {
             /* Check if it starts with quote to handle escapes */
             if (*str == '"') {
                 ++str;
-                lw->argv[lw->argc++] = str;         /* Set start of argument after quotes */
+                lw->argv[lw->argc++] = str;     /* Set start of argument after quotes */
 
                 /* Process until end of quote */
                 while (*str != '\0') {
@@ -139,10 +139,10 @@ prv_parse_input(lwshell_t* lw) {
                     }
                 }
             } else {
-                lw->argv[lw->argc++] = str;         /* Set start of argument directly on character */
+                lw->argv[lw->argc++] = str;     /* Set start of argument directly on character */
                 while ((*str != ' ' && *str != '\0')) {
-                    if (*str == '"') {              /* Quote should not be here... */
-                        *str = '\0';                /* ...add NULL termination to end token */
+                    if (*str == '"') {          /* Quote should not be here... */
+                        *str = '\0';            /* ...add NULL termination to end token */
                     }
                     ++str;
                 }
@@ -161,7 +161,8 @@ prv_parse_input(lwshell_t* lw) {
             lwshell_cmd_t* c = NULL;
             /* Process all commands */
             for (size_t i = 0; i < cmds_cnt; ++i) {
-                if (strncmp(cmds[i].name, lw->argv[0], strlen(lw->argv[0])) == 0) {
+                if (strlen(lw->argv[0]) == strlen(cmds[i].name)
+                    && strncmp(cmds[i].name, lw->argv[0], strlen(lw->argv[0])) == 0) {
                     c = &cmds[i];
                     break;
                 }
