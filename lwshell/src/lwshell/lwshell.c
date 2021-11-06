@@ -87,7 +87,6 @@ static lwshell_t shell;
 static void
 prv_parse_input(lwshell_t* lw) {
     size_t s_len;
-    char ch, prev_ch;
     char* str;
 
     lw = LWSHELL_GET_LW(lw);
@@ -100,14 +99,11 @@ prv_parse_input(lwshell_t* lw) {
 
     /* Must be more than `1` character since we have to include end of line */
     if (lw->buff_ptr > 0) {
-        uint8_t in_quote = 0;
-
         /* Set default values */
         lw->argc = 0;
         lw->argv[0] = lw->buff;
 
         /* Process complete input */
-        prev_ch = '\0';
         str = lw->buff;
 
         /* Process complete string */
