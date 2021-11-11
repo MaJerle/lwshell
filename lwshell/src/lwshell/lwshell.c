@@ -136,7 +136,7 @@ prv_parse_input(lwshell_t* lw) {
                 }
             } else {
                 lw->argv[lw->argc++] = str;     /* Set start of argument directly on character */
-                while ((*str != ' ' && *str != '\0')) {
+                while (*str != ' ' && *str != '\0') {
                     if (*str == '"') {          /* Quote should not be here... */
                         *str = '\0';            /* ...add NULL termination to end token */
                     }
@@ -155,10 +155,12 @@ prv_parse_input(lwshell_t* lw) {
         /* Check for command */
         if (lw->argc > 0 && cmds_cnt > 0) {
             lwshell_cmd_t* c = NULL;
+            size_t arg_len = strlen(lw->argv[0]);
+
             /* Process all commands */
             for (size_t i = 0; i < cmds_cnt; ++i) {
-                if (strlen(lw->argv[0]) == strlen(cmds[i].name)
-                    && strncmp(cmds[i].name, lw->argv[0], strlen(lw->argv[0])) == 0) {
+                if (arg_len == strlen(cmds[i].name)
+                    && strncmp(cmds[i].name, lw->argv[0], arg_len) == 0) {
                     c = &cmds[i];
                     break;
                 }
