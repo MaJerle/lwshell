@@ -29,10 +29,15 @@
  * This file is part of LwSHELL - Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.0.0
+ * Version:         v1.1.0
  */
 #include <string.h>
 #include "lwshell/lwshell.h"
+
+/* Check enabled features */
+#if LWSHELL_CFG_USE_ENABLE_LIST_CMD && !LWSHELL_CFG_USE_OUTPUT
+#error "To use list command feature, LWSHELL_CFG_USE_OUTPUT must be enabled"
+#endif
 
 /* Default characters */
 #define LWSHELL_ASCII_NULL                      0x00/*!< Null character */
@@ -87,7 +92,6 @@ static lwshell_t shell;
 static void
 prv_parse_input(lwshell_t* lw) {
     size_t s_len;
-    char ch, prev_ch;
     char* str;
 
     lw = LWSHELL_GET_LW(lw);
@@ -100,14 +104,11 @@ prv_parse_input(lwshell_t* lw) {
 
     /* Must be more than `1` character since we have to include end of line */
     if (lw->buff_ptr > 0) {
-        uint8_t in_quote = 0;
-
         /* Set default values */
         lw->argc = 0;
         lw->argv[0] = lw->buff;
 
         /* Process complete input */
-        prev_ch = '\0';
         str = lw->buff;
 
         /* Process complete string */
@@ -140,7 +141,7 @@ prv_parse_input(lwshell_t* lw) {
                 }
             } else {
                 lw->argv[lw->argc++] = str;     /* Set start of argument directly on character */
-                while ((*str != ' ' && *str != '\0')) {
+                while (*str != ' ' && *str != '\0') {
                     if (*str == '"') {          /* Quote should not be here... */
                         *str = '\0';            /* ...add NULL termination to end token */
                     }
@@ -159,10 +160,12 @@ prv_parse_input(lwshell_t* lw) {
         /* Check for command */
         if (lw->argc > 0 && cmds_cnt > 0) {
             lwshell_cmd_t* c = NULL;
+            size_t arg_len = strlen(lw->argv[0]);
+
             /* Process all commands */
             for (size_t i = 0; i < cmds_cnt; ++i) {
-                if (strlen(lw->argv[0]) == strlen(cmds[i].name)
-                    && strncmp(cmds[i].name, lw->argv[0], strlen(lw->argv[0])) == 0) {
+                if (arg_len == strlen(cmds[i].name)
+                    && strncmp(cmds[i].name, lw->argv[0], arg_len) == 0) {
                     c = &cmds[i];
                     break;
                 }
@@ -178,6 +181,18 @@ prv_parse_input(lwshell_t* lw) {
                 } else {
                     c->fn(lw->argc, lw->argv);
                 }
+#if LWSHELL_CFG_USE_ENABLE_LIST_CMD
+            } else if (strncmp(lw->argv[0], "listcmd", 7) == 0) {
+                LW_OUTPUT(lw, "List of registered commands\r\n");
+                for (size_t i = 0; i < cmds_cnt; ++i) {
+                    LW_OUTPUT(lw, cmds[i].name);
+                    LW_OUTPUT(lw, "\t\t\t");
+                    LW_OUTPUT(lw, cmds[i].desc);
+                    LW_OUTPUT(lw, "\r\n");
+                }
+#endif /* LWSHELL_CFG_USE_ENABLE_LIST_CMD */
+            } else {
+                LW_OUTPUT(lw, "Unknown command\r\n");
             }
         }
     }

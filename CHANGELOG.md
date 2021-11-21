@@ -2,6 +2,11 @@
 
 ## Develop
 
+## v1.1.0
+
+- Add support for `listcmd` to print all registered commands
+- Optimize code and remove unnecessary brackets
+
 ## v1.0.0
 
 - First stable release

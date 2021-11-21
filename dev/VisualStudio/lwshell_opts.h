@@ -29,7 +29,7 @@
  * This file is part of Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.0.0
+ * Version:         v1.1.0
  */
 #ifndef LWSHELL_HDR_OPTS_H
 #define LWSHELL_HDR_OPTS_H
@@ -38,6 +38,7 @@
 
 #include "windows.h"
 
-#define LWSHELL_CFG_USE_OUTPUT          1
+#define LWSHELL_CFG_USE_OUTPUT              1
+#define LWSHELL_CFG_USE_ENABLE_LIST_CMD     1
 
 #endif /* LWSHELL_HDR_OPTS_H */

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * \file            lwshell_opt.h
  * \brief           LwSHELL options
  */
@@ -29,7 +29,7 @@
  * This file is part of LwSHELL - Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.0.0
+ * Version:         v1.1.0
  */
 #ifndef LWSHELL_HDR_OPT_H
 #define LWSHELL_HDR_OPT_H
@@ -95,6 +95,15 @@ extern "C" {
  */
 #ifndef LWSHELL_CFG_USE_OUTPUT
 #define LWSHELL_CFG_USE_OUTPUT                  1
+#endif
+
+/**
+ * \brief           Enables `1` or disables `0` generic ˙listcmd` command to list of registered commands
+ *
+ * \ref LWSHELL_CFG_USE_OUTPUT must be enabled to use this feature
+ */
+#ifndef LWSHELL_CFG_USE_ENABLE_LIST_CMD
+#define LWSHELL_CFG_USE_ENABLE_LIST_CMD         0
 #endif
 
 /**
