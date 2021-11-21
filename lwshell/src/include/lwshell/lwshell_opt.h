@@ -1,4 +1,4 @@
-/**
+﻿/**
  * \file            lwshell_opt.h
  * \brief           LwSHELL options
  */
@@ -95,6 +95,15 @@ extern "C" {
  */
 #ifndef LWSHELL_CFG_USE_OUTPUT
 #define LWSHELL_CFG_USE_OUTPUT                  1
+#endif
+
+/**
+ * \brief           Enables `1` or disables `0` generic ˙listcmd` command to list of registered commands
+ *
+ * \ref LWSHELL_CFG_USE_OUTPUT must be enabled to use this feature
+ */
+#ifndef LWSHELL_CFG_USE_ENABLE_LIST_CMD
+#define LWSHELL_CFG_USE_ENABLE_LIST_CMD         0
 #endif
 
 /**

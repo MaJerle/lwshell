@@ -34,6 +34,11 @@
 #include <string.h>
 #include "lwshell/lwshell.h"
 
+/* Check enabled features */
+#if LWSHELL_CFG_USE_ENABLE_LIST_CMD && !LWSHELL_CFG_USE_OUTPUT
+#error "To use list command feature, LWSHELL_CFG_USE_OUTPUT must be enabled"
+#endif
+
 /* Default characters */
 #define LWSHELL_ASCII_NULL                      0x00/*!< Null character */
 #define LWSHELL_ASCII_BACKSPACE                 0x08/*!< Backspace */
@@ -176,6 +181,18 @@ prv_parse_input(lwshell_t* lw) {
                 } else {
                     c->fn(lw->argc, lw->argv);
                 }
+#if LWSHELL_CFG_USE_ENABLE_LIST_CMD
+            } else if (strncmp(lw->argv[0], "listcmd", 7) == 0) {
+                LW_OUTPUT(lw, "List of registered commands\r\n");
+                for (size_t i = 0; i < cmds_cnt; ++i) {
+                    LW_OUTPUT(lw, cmds[i].name);
+                    LW_OUTPUT(lw, "\t\t\t");
+                    LW_OUTPUT(lw, cmds[i].desc);
+                    LW_OUTPUT(lw, "\r\n");
+                }
+#endif /* LWSHELL_CFG_USE_ENABLE_LIST_CMD */
+            } else {
+                LW_OUTPUT(lw, "Unknown command\r\n");
             }
         }
     }
