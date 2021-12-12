@@ -88,10 +88,11 @@ main(void) {
     /* User input to process every character */
     printf("Start entering your command and press enter...\r\n");
     while (1) {
-        char c = getch();
+        char str[255];
+        fgets(str, sizeof(str), stdin);
 
         /* Insert input to library */
-        lwshell_input(&c, 1);
+        lwshell_input(str, strlen(str));
     }
     return 0;
 }
