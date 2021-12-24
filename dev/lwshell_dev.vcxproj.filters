@@ -16,10 +16,10 @@
     <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lwshell\src\lwshell\lwshell.c">
+    <ClCompile Include="..\lwshell\src\lwshell\lwshell.c">
       <Filter>Source Files\LWSHELL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\examples\example_minimal.c">
+    <ClCompile Include="..\examples\example_minimal.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
