@@ -2,6 +2,8 @@
 
 ## Develop
 
+- Split CMakeLists.txt files between library and executable
+
 ## v1.1.0
 
 - Add support for `listcmd` to print all registered commands
