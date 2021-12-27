@@ -1,20 +1,14 @@
 cmake_minimum_required(VERSION 3.13)
 
 # Debug message
-message("LWSHELL: Entering lib source CMakeLists.txt")
+message("Entering ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt")
 
-# Set library name
-set(LWSHELL_LIB_NAME "lwshell")
+# Register core library
+add_library(lwshell INTERFACE)
+target_sources(lwshell PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src/lwshell/lwshell.c)
+target_include_directories(lwshell INTERFACE ${CMAKE_CURRENT_LIST_DIR}/src/include)
 
-# Register library to the system
-add_library(${LWSHELL_LIB_NAME} INTERFACE)
+# Register other modules
 
-# Setup generic source files
-target_sources(${LWSHELL_LIB_NAME} INTERFACE
-    ${CMAKE_CURRENT_LIST_DIR}/src/lwshell/lwshell.c
-    )
-
-# Setup include directories
-target_include_directories(${LWSHELL_LIB_NAME} INTERFACE
-    ${CMAKE_CURRENT_LIST_DIR}/src/include
-    )
+# Debug message
+message("Exiting ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt")
