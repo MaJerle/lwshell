@@ -3,6 +3,20 @@
 #include <string.h>
 #include <stdint.h>
 
+/**
+ * \brief           Reading one character at a time 
+ *
+ * This is useful to test the shell in a "raw" mode (non-canonical input)
+ * Please note that conio.h is a windows only header
+ */
+#ifndef LWSHELL_TEST_READ_SINGLE_CHAR
+#define LWSHELL_TEST_READ_SINGLE_CHAR           0
+#endif
+
+#if LWSHELL_TEST_READ_SINGLE_CHAR
+#include <conio.h>
+#endif
+
 void    example_minimal(void);
 
 int32_t
@@ -89,7 +103,13 @@ main(void) {
     printf("Start entering your command and press enter...\r\n");
     while (1) {
         char str[255];
+
+#if LWSHELL_TEST_READ_SINGLE_CHAR
+        str[0] = getch();
+        str[1] = '\0';
+#else
         fgets(str, sizeof(str), stdin);
+#endif
 
         /* Insert input to library */
         lwshell_input(str, strlen(str));
