@@ -285,8 +285,8 @@ lwshell_input(const void* in_data, size_t len) {
             case LWSHELL_ASCII_BACKSPACE: {
                 /* Try to delete character from buffer */
                 if (lw->buff_ptr > 0) {
-                    lw->buff[lw->buff_ptr] = '\0';
                     --lw->buff_ptr;
+                    lw->buff[lw->buff_ptr] = '\0';
                     LW_OUTPUT(lw, "\b \b");
                 }
                 break;
