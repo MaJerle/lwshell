@@ -29,7 +29,7 @@
  * This file is part of LwSHELL - Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         vv1.1.1
+ * Version:         v1.1.1
  */
 #ifndef LWSHELL_HDR_H
 #define LWSHELL_HDR_H
