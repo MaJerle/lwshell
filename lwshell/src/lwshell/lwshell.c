@@ -29,7 +29,7 @@
  * This file is part of LwSHELL - Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.1.0
+ * Version:         vv1.1.1
  */
 #include <string.h>
 #include "lwshell/lwshell.h"
@@ -285,8 +285,8 @@ lwshell_input(const void* in_data, size_t len) {
             case LWSHELL_ASCII_BACKSPACE: {
                 /* Try to delete character from buffer */
                 if (lw->buff_ptr > 0) {
-                    lw->buff[lw->buff_ptr] = '\0';
                     --lw->buff_ptr;
+                    lw->buff[lw->buff_ptr] = '\0';
                     LW_OUTPUT(lw, "\b \b");
                 }
                 break;

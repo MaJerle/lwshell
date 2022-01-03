@@ -13,7 +13,7 @@ It targets communication with embedded systems from remote terminal to quickly s
 * Written in C language (C99)
 * No dynamic allocation, maximum number of commands assigned at compile time
 * Highly configurable
-* Simple help-text with `cmd -v` option
+* Simple help-text with `cmd -h` option
 * User friendly MIT license
 
 ## Contribute
