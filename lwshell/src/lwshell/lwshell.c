@@ -29,7 +29,7 @@
  * This file is part of LwSHELL - Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.1.0
+ * Version:         vv1.1.1
  */
 #include <string.h>
 #include "lwshell/lwshell.h"

@@ -2,7 +2,10 @@
 
 ## Develop
 
+## v1.1.1
+
 - Split CMakeLists.txt files between library and executable
+- Fix wrongly interpreted backspace character
 
 ## v1.1.0
 
