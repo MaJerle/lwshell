@@ -147,6 +147,9 @@ prv_parse_input(lwshell_t* lw) {
                     }
                     ++str;
                 }
+                if (*str == '\0') {
+                    break;
+                }
                 *str = '\0';
                 ++str;
             }
