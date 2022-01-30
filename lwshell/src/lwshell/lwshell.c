@@ -70,20 +70,20 @@ static lwshell_t shell;
 /* Get shell instance from input */
 #define LWSHELL_GET_LW(lw)          ((lw) != NULL ? (lw) : (&shell))
 
- /* Add character to instance */
+/* Add character to instance */
 #define LWSHELL_ADD_CH(lw, ch)      do {            \
-    if ((lw)->buff_ptr < (LWSHELL_ARRAYSIZE(lw->buff) - 1)) {   \
-        (lw)->buff[(lw)->buff_ptr] = ch;            \
-        (lw)->buff[++(lw)->buff_ptr] = '\0';        \
-    }                                               \
-} while (0)
+        if ((lw)->buff_ptr < (LWSHELL_ARRAYSIZE(lw->buff) - 1)) {   \
+            (lw)->buff[(lw)->buff_ptr] = ch;            \
+            (lw)->buff[++(lw)->buff_ptr] = '\0';        \
+        }                                               \
+    } while (0)
 
 /* Reset buffers */
 #define LWSHELL_RESET_BUFF(lw)      do {            \
-    memset((lw)->buff, 0x00, sizeof((lw)->buff));   \
-    memset((lw)->argv, 0x00, sizeof((lw)->argv));   \
-    (lw)->buff_ptr = 0;                             \
-} while (0)
+        memset((lw)->buff, 0x00, sizeof((lw)->buff));   \
+        memset((lw)->argv, 0x00, sizeof((lw)->argv));   \
+        (lw)->buff_ptr = 0;                             \
+    } while (0)
 
 /**
  * \brief           Parse input string

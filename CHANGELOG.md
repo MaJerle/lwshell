@@ -3,6 +3,7 @@
 ## Develop
 
 - Change license year to 2022
+- Update code style with astyle
 
 ## v1.1.1
 
