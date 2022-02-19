@@ -121,15 +121,13 @@ html_js_files = [
     ''
 ]
 
+# Master index file
 master_doc = 'index'
 
-#
-# Breathe configuration
-#
-#
-#
+# --- Breathe configuration -----------------------------------------------------
 breathe_projects = {
 	"lwshell": "_build/xml/"
 }
 breathe_default_project = "lwshell"
 breathe_default_members = ('members', 'undoc-members')
+breathe_show_enumvalue_initializer = True
