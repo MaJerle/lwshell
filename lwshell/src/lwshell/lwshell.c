@@ -96,9 +96,8 @@ prv_parse_input(lwshell_t* lw) {
 
     lw = LWSHELL_GET_LW(lw);
 
-    /* Check string length and compare */
-    s_len = strlen(lw->buff);
-    if (lw->buff_ptr != s_len) {
+    /* Check string length and compare with buffer pointer */
+    if ((s_len = strlen(lw->buff)) != lw->buff_ptr) {
         return;
     }
 
