@@ -78,6 +78,7 @@ subdbl_cmd(int32_t argc, char** argv) {
  */
 void
 shell_output(const char* str, lwshell_t* lw) {
+    (void)lw;
     printf("%s", str);
     if (*str == '\r') {
         printf("\n");
