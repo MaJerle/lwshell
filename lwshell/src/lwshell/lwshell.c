@@ -40,15 +40,20 @@
 #endif
 
 /* Default characters */
-#define LWSHELL_ASCII_NULL                      0x00/*!< Null character */
-#define LWSHELL_ASCII_BACKSPACE                 0x08/*!< Backspace */
-#define LWSHELL_ASCII_LF                        0x0A/*!< Line feed */
-#define LWSHELL_ASCII_CR                        0x0D/*!< Carriage return */
-#define LWSHELL_ASCII_DEL                       0x7F/*!< Delete character */
-#define LWSHELL_ASCII_SPACE                     0x20/*!< Space character */
+#define LWSHELL_ASCII_NULL      0x00 /*!< Null character */
+#define LWSHELL_ASCII_BACKSPACE 0x08 /*!< Backspace */
+#define LWSHELL_ASCII_LF        0x0A /*!< Line feed */
+#define LWSHELL_ASCII_CR        0x0D /*!< Carriage return */
+#define LWSHELL_ASCII_DEL       0x7F /*!< Delete character */
+#define LWSHELL_ASCII_SPACE     0x20 /*!< Space character */
 
 #if LWSHELL_CFG_USE_OUTPUT
-#define LW_OUTPUT(lw, str)          do { if ((lw)->out_fn != NULL && (str) != NULL) { (lw)->out_fn((str), (lw)); }} while (0)
+#define LW_OUTPUT(lw, str)                                                                                             \
+    do {                                                                                                               \
+        if ((lw)->out_fn != NULL && (str) != NULL) {                                                                   \
+            (lw)->out_fn((str), (lw));                                                                                 \
+        }                                                                                                              \
+    } while (0)
 #else
 #define LW_OUTPUT(lw, str)
 #endif
@@ -57,9 +62,9 @@
  * \brief           Shell command structure
  */
 typedef struct {
-    lwshell_cmd_fn fn;                          /*!< Command function to call on match */
-    const char* name;                           /*!< Command name to search for match */
-    const char* desc;                           /*!< Command description for help */
+    lwshell_cmd_fn fn; /*!< Command function to call on match */
+    const char* name;  /*!< Command name to search for match */
+    const char* desc;  /*!< Command description for help */
 } lwshell_cmd_t;
 
 /* Array of all commands */
@@ -68,21 +73,23 @@ static size_t cmds_cnt;
 static lwshell_t shell;
 
 /* Get shell instance from input */
-#define LWSHELL_GET_LW(lw)          ((lw) != NULL ? (lw) : (&shell))
+#define LWSHELL_GET_LW(lw) ((lw) != NULL ? (lw) : (&shell))
 
 /* Add character to instance */
-#define LWSHELL_ADD_CH(lw, ch)      do {            \
-        if ((lw)->buff_ptr < (LWSHELL_ARRAYSIZE(lw->buff) - 1)) {   \
-            (lw)->buff[(lw)->buff_ptr] = ch;            \
-            (lw)->buff[++(lw)->buff_ptr] = '\0';        \
-        }                                               \
+#define LWSHELL_ADD_CH(lw, ch)                                                                                         \
+    do {                                                                                                               \
+        if ((lw)->buff_ptr < (LWSHELL_ARRAYSIZE(lw->buff) - 1)) {                                                      \
+            (lw)->buff[(lw)->buff_ptr] = ch;                                                                           \
+            (lw)->buff[++(lw)->buff_ptr] = '\0';                                                                       \
+        }                                                                                                              \
     } while (0)
 
 /* Reset buffers */
-#define LWSHELL_RESET_BUFF(lw)      do {            \
-        memset((lw)->buff, 0x00, sizeof((lw)->buff));   \
-        memset((lw)->argv, 0x00, sizeof((lw)->argv));   \
-        (lw)->buff_ptr = 0;                             \
+#define LWSHELL_RESET_BUFF(lw)                                                                                         \
+    do {                                                                                                               \
+        memset((lw)->buff, 0x00, sizeof((lw)->buff));                                                                  \
+        memset((lw)->argv, 0x00, sizeof((lw)->argv));                                                                  \
+        (lw)->buff_ptr = 0;                                                                                            \
     } while (0)
 
 /**
@@ -113,7 +120,7 @@ prv_parse_input(lwshell_t* lw) {
         /* Process complete string */
         lw->argc = 0;
         while (*str != '\0') {
-            while (*str == ' ' && ++str) {}     /* Remove leading spaces */
+            while (*str == ' ' && ++str) {} /* Remove leading spaces */
             if (*str == '\0') {
                 break;
             }
@@ -121,7 +128,7 @@ prv_parse_input(lwshell_t* lw) {
             /* Check if it starts with quote to handle escapes */
             if (*str == '"') {
                 ++str;
-                lw->argv[lw->argc++] = str;     /* Set start of argument after quotes */
+                lw->argv[lw->argc++] = str; /* Set start of argument after quotes */
 
                 /* Process until end of quote */
                 while (*str != '\0') {
@@ -139,10 +146,10 @@ prv_parse_input(lwshell_t* lw) {
                     }
                 }
             } else {
-                lw->argv[lw->argc++] = str;     /* Set start of argument directly on character */
+                lw->argv[lw->argc++] = str; /* Set start of argument directly on character */
                 while (*str != ' ' && *str != '\0') {
-                    if (*str == '"') {          /* Quote should not be here... */
-                        *str = '\0';            /* ...add NULL termination to end token */
+                    if (*str == '"') { /* Quote should not be here... */
+                        *str = '\0';   /* ...add NULL termination to end token */
                     }
                     ++str;
                 }
@@ -166,8 +173,7 @@ prv_parse_input(lwshell_t* lw) {
 
             /* Process all commands */
             for (size_t i = 0; i < cmds_cnt; ++i) {
-                if (arg_len == strlen(cmds[i].name)
-                    && strncmp(cmds[i].name, lw->argv[0], arg_len) == 0) {
+                if (arg_len == strlen(cmds[i].name) && strncmp(cmds[i].name, lw->argv[0], arg_len) == 0) {
                     c = &cmds[i];
                     break;
                 }
@@ -175,8 +181,7 @@ prv_parse_input(lwshell_t* lw) {
 
             /* Valid command ready? */
             if (c != NULL) {
-                if (lw->argc == 2
-                    && lw->argv[1][0] == '-' && lw->argv[1][1] == 'h' && lw->argv[1][2] == '\0') {
+                if (lw->argc == 2 && lw->argv[1][0] == '-' && lw->argv[1][1] == 'h' && lw->argv[1][2] == '\0') {
                     /* Here we can print version */
                     LW_OUTPUT(lw, c->desc);
                     LW_OUTPUT(lw, "\r\n");
@@ -237,8 +242,7 @@ lwshell_set_output_fn(lwshell_output_fn out_fn) {
  */
 lwshellr_t
 lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc) {
-    if (cmd_name == NULL || cmd_fn == NULL
-        || strlen(cmd_name) == 0) {
+    if (cmd_name == NULL || cmd_fn == NULL || strlen(cmd_name) == 0) {
         return lwshellERRPAR;
     }
 
@@ -294,7 +298,7 @@ lwshell_input(const void* in_data, size_t len) {
                 break;
             }
             default: {
-                char str[2] = { d[i] };
+                char str[2] = {d[i]};
                 LW_OUTPUT(lw, str);
                 if (d[i] >= 0x20 && d[i] < 0x7F) {
                     LWSHELL_ADD_CH(lw, d[i]);

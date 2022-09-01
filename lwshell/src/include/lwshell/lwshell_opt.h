@@ -57,7 +57,7 @@ extern "C" {
  *
  */
 #ifndef LWSHELL_CFG_MAX_CMDS
-#define LWSHELL_CFG_MAX_CMDS                    8
+#define LWSHELL_CFG_MAX_CMDS 8
 #endif
 
 /**
@@ -67,7 +67,7 @@ extern "C" {
  * Commands longer than this are automatically discarded
  */
 #ifndef LWSHELL_CFG_MAX_INPUT_LEN
-#define LWSHELL_CFG_MAX_INPUT_LEN               128
+#define LWSHELL_CFG_MAX_INPUT_LEN 128
 #endif
 
 /**
@@ -75,7 +75,7 @@ extern "C" {
  *
  */
 #ifndef LWSHELL_CFG_MAX_CMD_NAME_LEN
-#define LWSHELL_CFG_MAX_CMD_NAME_LEN            16
+#define LWSHELL_CFG_MAX_CMD_NAME_LEN 16
 #endif
 
 /**
@@ -84,7 +84,7 @@ extern "C" {
  * Number includes command name itself
  */
 #ifndef LWSHELL_CFG_MAX_CMD_ARGS
-#define LWSHELL_CFG_MAX_CMD_ARGS                8
+#define LWSHELL_CFG_MAX_CMD_ARGS 8
 #endif
 
 /**
@@ -94,7 +94,7 @@ extern "C" {
  * This is useful to give library feedback to user
  */
 #ifndef LWSHELL_CFG_USE_OUTPUT
-#define LWSHELL_CFG_USE_OUTPUT                  1
+#define LWSHELL_CFG_USE_OUTPUT 1
 #endif
 
 /**
@@ -103,7 +103,7 @@ extern "C" {
  * \ref LWSHELL_CFG_USE_OUTPUT must be enabled to use this feature
  */
 #ifndef LWSHELL_CFG_USE_ENABLE_LIST_CMD
-#define LWSHELL_CFG_USE_ENABLE_LIST_CMD         0
+#define LWSHELL_CFG_USE_ENABLE_LIST_CMD 0
 #endif
 
 /**

@@ -53,15 +53,15 @@ extern "C" {
  * \param[in]       x: Object to get array size of
  * \return          Number of elements in array
  */
-#define LWSHELL_ARRAYSIZE(x)            (sizeof(x) / sizeof((x)[0]))
+#define LWSHELL_ARRAYSIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 /**
  * \brief           LwSHELL result enumeration
  */
 typedef enum {
-    lwshellOK = 0x00,                           /*!< Everything OK */
-    lwshellERRPAR,                              /*!< Parameter error */
-    lwshellERRMEM,                              /*!< Memory error */
+    lwshellOK = 0x00, /*!< Everything OK */
+    lwshellERRPAR,    /*!< Parameter error */
+    lwshellERRMEM,    /*!< Memory error */
 } lwshellr_t;
 
 /* Forward declaration */
@@ -86,45 +86,45 @@ typedef void (*lwshell_output_fn)(const char* str, struct lwshell* lw);
  * \brief           LwSHELL main structure
  */
 typedef struct lwshell {
-    lwshell_output_fn out_fn;                   /*!< Optional output function */
-    char buff[LWSHELL_CFG_MAX_INPUT_LEN + 1];   /*!< Shell command input buffer */
-    size_t buff_ptr;                            /*!< Buffer pointer for input */
-    int32_t argc;                               /*!< Number of arguments parsed in command */
-    char* argv[LWSHELL_CFG_MAX_CMD_ARGS];       /*!< Array of all arguments */
+    lwshell_output_fn out_fn;                 /*!< Optional output function */
+    char buff[LWSHELL_CFG_MAX_INPUT_LEN + 1]; /*!< Shell command input buffer */
+    size_t buff_ptr;                          /*!< Buffer pointer for input */
+    int32_t argc;                             /*!< Number of arguments parsed in command */
+    char* argv[LWSHELL_CFG_MAX_CMD_ARGS];     /*!< Array of all arguments */
 } lwshell_t;
 
-lwshellr_t  lwshell_init(void);
-lwshellr_t  lwshell_set_output_fn(lwshell_output_fn out_fn);
-lwshellr_t  lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
-lwshellr_t  lwshell_input(const void* in_data, size_t len);
+lwshellr_t lwshell_init(void);
+lwshellr_t lwshell_set_output_fn(lwshell_output_fn out_fn);
+lwshellr_t lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
+lwshellr_t lwshell_input(const void* in_data, size_t len);
 
 /**
  * \brief           Parse input string as `integer`
  * \param[in]       str: String to parse
  * \return          String parsed as integer
  */
-#define lwshell_parse_int(str)              atoi(str)
+#define lwshell_parse_int(str)       atoi(str)
 
 /**
  * \brief           Parse input string as `double`
  * \param[in]       str: String to parse
  * \return          String parsed as `double`
  */
-#define lwshell_parse_double(str)           atof(str)
+#define lwshell_parse_double(str)    atof(str)
 
 /**
  * \brief           Parse input string as `long`
  * \param[in]       str: String to parse
  * \return          String parsed as `long`
  */
-#define lwshell_parse_long(str)             atol(str)
+#define lwshell_parse_long(str)      atol(str)
 
 /**
  * \brief           Parse input string as `long long`
  * \param[in]       str: String to parse
  * \return          String parsed as `long long`
  */
-#define lwshell_parse_long_long(str)        atoll(str)
+#define lwshell_parse_long_long(str) atoll(str)
 
 /**
  * \}
