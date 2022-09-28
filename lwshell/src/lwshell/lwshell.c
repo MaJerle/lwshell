@@ -58,15 +58,6 @@
 #define LW_OUTPUT(lw, str)
 #endif
 
-/**
- * \brief           Shell command structure
- */
-typedef struct {
-    lwshell_cmd_fn fn; /*!< Command function to call on match */
-    const char* name;  /*!< Command name to search for match */
-    const char* desc;  /*!< Command description for help */
-} lwshell_cmd_t;
-
 /* Array of all commands */
 static lwshell_cmd_t cmds[LWSHELL_CFG_MAX_CMDS];
 static size_t cmds_cnt;
