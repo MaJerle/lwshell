@@ -93,6 +93,15 @@ typedef struct lwshell {
     char* argv[LWSHELL_CFG_MAX_CMD_ARGS];     /*!< Array of all arguments */
 } lwshell_t;
 
+/**
+ * \brief           Shell command structure
+ */
+typedef struct {
+    lwshell_cmd_fn fn; /*!< Command function to call on match */
+    const char* name;  /*!< Command name to search for match */
+    const char* desc;  /*!< Command description for help */
+} lwshell_cmd_t;
+
 lwshellr_t lwshell_init(void);
 lwshellr_t lwshell_set_output_fn(lwshell_output_fn out_fn);
 lwshellr_t lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
