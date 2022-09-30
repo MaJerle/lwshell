@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.22)
 # Setup project
 project(LwLibPROJECT)
 
-if (NOT PROJECT_IS_TOP_LEVEL)
+if(NOT PROJECT_IS_TOP_LEVEL)
     add_subdirectory(lwshell)
 else()
     # Set as executable
@@ -35,6 +35,6 @@ else()
     )
 
     # Add subdir with lwshell and link to project
-    add_subdirectory("lwshell" lwshell)
+    add_subdirectory(lwshell)
     target_link_libraries(${PROJECT_NAME} lwshell)
 endif()
