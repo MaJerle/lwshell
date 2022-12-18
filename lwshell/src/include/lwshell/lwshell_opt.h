@@ -31,8 +31,8 @@
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
  * Version:         v1.1.1
  */
-#ifndef LWSHELL_HDR_OPT_H
-#define LWSHELL_HDR_OPT_H
+#ifndef LWSHELL_OPT_HDR_H
+#define LWSHELL_OPT_HDR_H
 
 /* Uncomment to ignore user options (or set macro in compiler flags) */
 /* #define LWSHELL_IGNORE_USER_OPTS */
@@ -114,4 +114,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif /* LWSHELL_HDR_OPT_H */
+#endif /* LWSHELL_OPT_HDR_H */

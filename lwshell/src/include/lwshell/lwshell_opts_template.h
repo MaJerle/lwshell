@@ -31,8 +31,8 @@
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
  * Version:         v1.1.1
  */
-#ifndef LWSHELL_HDR_OPTS_H
-#define LWSHELL_HDR_OPTS_H
+#ifndef LWSHELL_OPTS_HDR_H
+#define LWSHELL_OPTS_HDR_H
 
 /* Rename this file to "lwshell_opts.h" for your application */
 
@@ -41,4 +41,4 @@
  * copy & replace here settings you want to change values
  */
 
-#endif /* LWSHELL_HDR_OPTS_H */
+#endif /* LWSHELL_OPTS_HDR_H */
