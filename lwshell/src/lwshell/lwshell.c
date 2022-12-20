@@ -48,14 +48,14 @@
 #define LWSHELL_ASCII_SPACE     0x20 /*!< Space character */
 
 #if LWSHELL_CFG_USE_OUTPUT
-#define LW_OUTPUT(lw, str)                                                                                             \
+#define LWSHELL_OUTPUT(lwobj, str)                                                                                     \
     do {                                                                                                               \
-        if ((lw)->out_fn != NULL && (str) != NULL) {                                                                   \
-            (lw)->out_fn((str), (lw));                                                                                 \
+        if ((lwobj)->out_fn != NULL && (str) != NULL) {                                                                \
+            (lwobj)->out_fn((str), (lwobj));                                                                           \
         }                                                                                                              \
     } while (0)
 #else
-#define LW_OUTPUT(lw, str)
+#define LWSHELL_OUTPUT(lwobj, str)
 #endif
 
 /* Array of all commands */
@@ -64,52 +64,52 @@ static size_t cmds_cnt;
 static lwshell_t shell;
 
 /* Get shell instance from input */
-#define LWSHELL_GET_LW(lw) ((lw) != NULL ? (lw) : (&shell))
+#define LWSHELL_GET_LWOBJ(lwobj) ((lwobj) != NULL ? (lwobj) : (&shell))
 
 /* Add character to instance */
-#define LWSHELL_ADD_CH(lw, ch)                                                                                         \
+#define LWSHELL_ADD_CH(lwobj, ch)                                                                                      \
     do {                                                                                                               \
-        if ((lw)->buff_ptr < (LWSHELL_ARRAYSIZE(lw->buff) - 1)) {                                                      \
-            (lw)->buff[(lw)->buff_ptr] = ch;                                                                           \
-            (lw)->buff[++(lw)->buff_ptr] = '\0';                                                                       \
+        if ((lwobj)->buff_ptr < (LWSHELL_ARRAYSIZE(lwobj->buff) - 1)) {                                                \
+            (lwobj)->buff[(lwobj)->buff_ptr] = ch;                                                                     \
+            (lwobj)->buff[++(lwobj)->buff_ptr] = '\0';                                                                 \
         }                                                                                                              \
     } while (0)
 
 /* Reset buffers */
-#define LWSHELL_RESET_BUFF(lw)                                                                                         \
+#define LWSHELL_RESET_BUFF(lwobj)                                                                                      \
     do {                                                                                                               \
-        memset((lw)->buff, 0x00, sizeof((lw)->buff));                                                                  \
-        memset((lw)->argv, 0x00, sizeof((lw)->argv));                                                                  \
-        (lw)->buff_ptr = 0;                                                                                            \
+        memset((lwobj)->buff, 0x00, sizeof((lwobj)->buff));                                                            \
+        memset((lwobj)->argv, 0x00, sizeof((lwobj)->argv));                                                            \
+        (lwobj)->buff_ptr = 0;                                                                                         \
     } while (0)
 
 /**
  * \brief           Parse input string
- * \param[in]       lw: LwSHELL instance
+ * \param[in]       lwobj: LwSHELL instance
  */
 static void
-prv_parse_input(lwshell_t* lw) {
+prv_parse_input(lwshell_t* lwobj) {
     size_t s_len;
     char* str;
 
-    lw = LWSHELL_GET_LW(lw);
+    lwobj = LWSHELL_GET_LWOBJ(lwobj);
 
     /* Check string length and compare with buffer pointer */
-    if ((s_len = strlen(lw->buff)) != lw->buff_ptr) {
+    if ((s_len = strlen(lwobj->buff)) != lwobj->buff_ptr) {
         return;
     }
 
     /* Must be more than `1` character since we have to include end of line */
-    if (lw->buff_ptr > 0) {
+    if (lwobj->buff_ptr > 0) {
         /* Set default values */
-        lw->argc = 0;
-        lw->argv[0] = lw->buff;
+        lwobj->argc = 0;
+        lwobj->argv[0] = lwobj->buff;
 
         /* Process complete input */
-        str = lw->buff;
+        str = lwobj->buff;
 
         /* Process complete string */
-        lw->argc = 0;
+        lwobj->argc = 0;
         while (*str != '\0') {
             while (*str == ' ' && ++str) {} /* Remove leading spaces */
             if (*str == '\0') {
@@ -119,7 +119,7 @@ prv_parse_input(lwshell_t* lw) {
             /* Check if it starts with quote to handle escapes */
             if (*str == '"') {
                 ++str;
-                lw->argv[lw->argc++] = str; /* Set start of argument after quotes */
+                lwobj->argv[lwobj->argc++] = str; /* Set start of argument after quotes */
 
                 /* Process until end of quote */
                 while (*str != '\0') {
@@ -137,7 +137,7 @@ prv_parse_input(lwshell_t* lw) {
                     }
                 }
             } else {
-                lw->argv[lw->argc++] = str; /* Set start of argument directly on character */
+                lwobj->argv[lwobj->argc++] = str; /* Set start of argument directly on character */
                 while (*str != ' ' && *str != '\0') {
                     if (*str == '"') { /* Quote should not be here... */
                         *str = '\0';   /* ...add NULL termination to end token */
@@ -152,19 +152,19 @@ prv_parse_input(lwshell_t* lw) {
             }
 
             /* Check for number of arguments */
-            if (lw->argc == LWSHELL_ARRAYSIZE(lw->argv)) {
+            if (lwobj->argc == LWSHELL_ARRAYSIZE(lwobj->argv)) {
                 break;
             }
         }
 
         /* Check for command */
-        if (lw->argc > 0 && cmds_cnt > 0) {
+        if (lwobj->argc > 0 && cmds_cnt > 0) {
             lwshell_cmd_t* c = NULL;
-            size_t arg_len = strlen(lw->argv[0]);
+            size_t arg_len = strlen(lwobj->argv[0]);
 
             /* Process all commands */
             for (size_t i = 0; i < cmds_cnt; ++i) {
-                if (arg_len == strlen(cmds[i].name) && strncmp(cmds[i].name, lw->argv[0], arg_len) == 0) {
+                if (arg_len == strlen(cmds[i].name) && strncmp(cmds[i].name, lwobj->argv[0], arg_len) == 0) {
                     c = &cmds[i];
                     break;
                 }
@@ -172,25 +172,26 @@ prv_parse_input(lwshell_t* lw) {
 
             /* Valid command ready? */
             if (c != NULL) {
-                if (lw->argc == 2 && lw->argv[1][0] == '-' && lw->argv[1][1] == 'h' && lw->argv[1][2] == '\0') {
+                if (lwobj->argc == 2 && lwobj->argv[1][0] == '-' && lwobj->argv[1][1] == 'h'
+                    && lwobj->argv[1][2] == '\0') {
                     /* Here we can print version */
-                    LW_OUTPUT(lw, c->desc);
-                    LW_OUTPUT(lw, "\r\n");
+                    LWSHELL_OUTPUT(lwobj, c->desc);
+                    LWSHELL_OUTPUT(lwobj, "\r\n");
                 } else {
-                    c->fn(lw->argc, lw->argv);
+                    c->fn(lwobj->argc, lwobj->argv);
                 }
 #if LWSHELL_CFG_USE_ENABLE_LIST_CMD
-            } else if (strncmp(lw->argv[0], "listcmd", 7) == 0) {
-                LW_OUTPUT(lw, "List of registered commands\r\n");
+            } else if (strncmp(lwobj->argv[0], "listcmd", 7) == 0) {
+                LWSHELL_OUTPUT(lwobj, "List of registered commands\r\n");
                 for (size_t i = 0; i < cmds_cnt; ++i) {
-                    LW_OUTPUT(lw, cmds[i].name);
-                    LW_OUTPUT(lw, "\t\t\t");
-                    LW_OUTPUT(lw, cmds[i].desc);
-                    LW_OUTPUT(lw, "\r\n");
+                    LWSHELL_OUTPUT(lwobj, cmds[i].name);
+                    LWSHELL_OUTPUT(lwobj, "\t\t\t");
+                    LWSHELL_OUTPUT(lwobj, cmds[i].desc);
+                    LWSHELL_OUTPUT(lwobj, "\r\n");
                 }
 #endif /* LWSHELL_CFG_USE_ENABLE_LIST_CMD */
             } else {
-                LW_OUTPUT(lw, "Unknown command\r\n");
+                LWSHELL_OUTPUT(lwobj, "Unknown command\r\n");
             }
         }
     }
@@ -202,8 +203,8 @@ prv_parse_input(lwshell_t* lw) {
  */
 lwshellr_t
 lwshell_init(void) {
-    lwshell_t* lw = LWSHELL_GET_LW(NULL);
-    memset(lw, 0x00, sizeof(*lw));
+    lwshell_t* lwobj = LWSHELL_GET_LWOBJ(NULL);
+    memset(lwobj, 0x00, sizeof(*lwobj));
     return lwshellOK;
 }
 
@@ -217,8 +218,8 @@ lwshell_init(void) {
  */
 lwshellr_t
 lwshell_set_output_fn(lwshell_output_fn out_fn) {
-    lwshell_t* lw = LWSHELL_GET_LW(NULL);
-    lw->out_fn = out_fn;
+    lwshell_t* lwobj = LWSHELL_GET_LWOBJ(NULL);
+    lwobj->out_fn = out_fn;
     return lwshellOK;
 }
 
@@ -258,7 +259,7 @@ lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* de
 lwshellr_t
 lwshell_input(const void* in_data, size_t len) {
     const char* d = in_data;
-    lwshell_t* lw = LWSHELL_GET_LW(NULL);
+    lwshell_t* lwobj = LWSHELL_GET_LWOBJ(NULL);
 
     if (in_data == NULL || len == 0) {
         return lwshellERRPAR;
@@ -268,31 +269,31 @@ lwshell_input(const void* in_data, size_t len) {
     for (size_t i = 0; i < len; ++i) {
         switch (d[i]) {
             case LWSHELL_ASCII_CR: {
-                LW_OUTPUT(lw, "\r");
-                prv_parse_input(lw);
-                LWSHELL_RESET_BUFF(lw);
+                LWSHELL_OUTPUT(lwobj, "\r");
+                prv_parse_input(lwobj);
+                LWSHELL_RESET_BUFF(lwobj);
                 break;
             }
             case LWSHELL_ASCII_LF: {
-                LW_OUTPUT(lw, "\n");
-                prv_parse_input(lw);
-                LWSHELL_RESET_BUFF(lw);
+                LWSHELL_OUTPUT(lwobj, "\n");
+                prv_parse_input(lwobj);
+                LWSHELL_RESET_BUFF(lwobj);
                 break;
             }
             case LWSHELL_ASCII_BACKSPACE: {
                 /* Try to delete character from buffer */
-                if (lw->buff_ptr > 0) {
-                    --lw->buff_ptr;
-                    lw->buff[lw->buff_ptr] = '\0';
-                    LW_OUTPUT(lw, "\b \b");
+                if (lwobj->buff_ptr > 0) {
+                    --lwobj->buff_ptr;
+                    lwobj->buff[lwobj->buff_ptr] = '\0';
+                    LWSHELL_OUTPUT(lwobj, "\b \b");
                 }
                 break;
             }
             default: {
                 char str[2] = {d[i]};
-                LW_OUTPUT(lw, str);
+                LWSHELL_OUTPUT(lwobj, str);
                 if (d[i] >= 0x20 && d[i] < 0x7F) {
-                    LWSHELL_ADD_CH(lw, d[i]);
+                    LWSHELL_ADD_CH(lwobj, d[i]);
                 }
             }
         }

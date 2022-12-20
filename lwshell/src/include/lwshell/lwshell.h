@@ -78,9 +78,9 @@ typedef int32_t (*lwshell_cmd_fn)(int32_t argc, char** argv);
 /**
  * \brief           Callback function for character output
  * \param[in]       str: String to output
- * \param[in]       lw: LwSHELL instance
+ * \param[in]       lwobj: LwSHELL instance
  */
-typedef void (*lwshell_output_fn)(const char* str, struct lwshell* lw);
+typedef void (*lwshell_output_fn)(const char* str, struct lwshell* lwobj);
 
 /**
  * \brief           LwSHELL main structure
