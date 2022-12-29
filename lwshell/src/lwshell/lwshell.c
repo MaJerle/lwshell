@@ -109,7 +109,6 @@ prv_parse_input(lwshell_t* lwobj) {
         str = lwobj->buff;
 
         /* Process complete string */
-        lwobj->argc = 0;
         while (*str != '\0') {
             while (*str == ' ' && ++str) {} /* Remove leading spaces */
             if (*str == '\0') {
