@@ -83,17 +83,6 @@ typedef int32_t (*lwshell_cmd_fn)(int32_t argc, char** argv);
 typedef void (*lwshell_output_fn)(const char* str, struct lwshell* lwobj);
 
 /**
- * \brief           LwSHELL main structure
- */
-typedef struct lwshell {
-    lwshell_output_fn out_fn;                 /*!< Optional output function */
-    char buff[LWSHELL_CFG_MAX_INPUT_LEN + 1]; /*!< Shell command input buffer */
-    size_t buff_ptr;                          /*!< Buffer pointer for input */
-    int32_t argc;                             /*!< Number of arguments parsed in command */
-    char* argv[LWSHELL_CFG_MAX_CMD_ARGS];     /*!< Array of all arguments */
-} lwshell_t;
-
-/**
  * \brief           Shell command structure
  */
 typedef struct {
@@ -102,38 +91,86 @@ typedef struct {
     const char* desc;  /*!< Command description for help */
 } lwshell_cmd_t;
 
-lwshellr_t lwshell_init(void);
-lwshellr_t lwshell_set_output_fn(lwshell_output_fn out_fn);
-lwshellr_t lwshell_register_cmd(const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
-lwshellr_t lwshell_input(const void* in_data, size_t len);
+/**
+ * \brief           LwSHELL main structure
+ */
+typedef struct lwshell {
+    lwshell_output_fn out_fn;                 /*!< Optional output function */
+    char buff[LWSHELL_CFG_MAX_INPUT_LEN + 1]; /*!< Shell command input buffer */
+    size_t buff_ptr;                          /*!< Buffer pointer for input */
+    int32_t argc;                             /*!< Number of arguments parsed in command */
+    char* argv[LWSHELL_CFG_MAX_CMD_ARGS];     /*!< Array of all arguments */
+    lwshell_cmd_t cmds[LWSHELL_CFG_MAX_CMDS]; /*!< Shell registered commands */
+    size_t cmds_cnt;                          /*!< Number of registered commands */
+} lwshell_t;
+
+lwshellr_t lwshell_init_ex(lwshell_t* lwobj);
+lwshellr_t lwshell_set_output_fn_ex(lwshell_t* lwobj, lwshell_output_fn out_fn);
+lwshellr_t lwshell_register_cmd_ex(lwshell_t* lwobj, const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
+lwshellr_t lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len);
+
+/**
+ * \brief           Initialize shell interface
+ * \note            It applies to default shell instance
+ * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ */
+#define lwshell_init()                               lwshell_init_ex(NULL)
+
+/**
+ * \brief           Set output function to use to print data from library to user
+ * \note            It applies to default shell instance
+ * \param[in]       out_fn: Output function to print library data.
+ *                      Set to `NULL` to disable the feature
+ * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ */
+#define lwshell_set_output_fn(out_fn)                lwshell_set_output_fn_ex(NULL, (out_fn))
+
+/**
+ * \brief           Register new command to shell
+ * \note            It applies to default shell instance
+ * \param[in]       cmd_name: Command name. This one is used when entering shell command
+ * \param[in]       cmd_fn: Function to call on command match
+ * \param[in]       desc: Custom command description
+ * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ */
+#define lwshell_register_cmd(cmd_name, cmd_fn, desc) lwshell_register_cmd_ex(NULL, (cmd_name), (cmd_fn), (desc))
+
+/**
+ * \brief           Input data to shell processing
+ * \note            It applies to default shell instance
+ * \param[in]       in_data: Input data to process
+ * \param[in]       len: Length of data for input
+ * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ */
+#define lwshell_input(in_data, len)                  lwshell_input_ex(NULL, (in_data), (len))
 
 /**
  * \brief           Parse input string as `integer`
  * \param[in]       str: String to parse
  * \return          String parsed as integer
  */
-#define lwshell_parse_int(str)       atoi(str)
+#define lwshell_parse_int(str)                       atoi(str)
 
 /**
  * \brief           Parse input string as `double`
  * \param[in]       str: String to parse
  * \return          String parsed as `double`
  */
-#define lwshell_parse_double(str)    atof(str)
+#define lwshell_parse_double(str)                    atof(str)
 
 /**
  * \brief           Parse input string as `long`
  * \param[in]       str: String to parse
  * \return          String parsed as `long`
  */
-#define lwshell_parse_long(str)      atol(str)
+#define lwshell_parse_long(str)                      atol(str)
 
 /**
  * \brief           Parse input string as `long long`
  * \param[in]       str: String to parse
  * \return          String parsed as `long long`
  */
-#define lwshell_parse_long_long(str) atoll(str)
+#define lwshell_parse_long_long(str)                 atoll(str)
 
 /**
  * \}
