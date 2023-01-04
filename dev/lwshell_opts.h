@@ -4,7 +4,7 @@
  */
 
 /*
- * Copyright (c) 2020 Tilen MAJERLE
+ * Copyright (c) 2023 Tilen MAJERLE
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,7 +29,7 @@
  * This file is part of Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.1.1
+ * Version:         v1.2.0
  */
 #ifndef LWSHELL_HDR_OPTS_H
 #define LWSHELL_HDR_OPTS_H
@@ -38,7 +38,9 @@
 
 #include "windows.h"
 
-#define LWSHELL_CFG_USE_OUTPUT              1
-#define LWSHELL_CFG_USE_ENABLE_LIST_CMD     1
+#define LWSHELL_CFG_USE_OUTPUT           1
+#define LWSHELL_CFG_USE_LIST_CMD         1
+#define LWSHELL_CFG_USE_DYNAMIC_COMMANDS 1
+#define LWSHELL_CFG_USE_STATIC_COMMANDS  1
 
 #endif /* LWSHELL_HDR_OPTS_H */

@@ -4,7 +4,7 @@
  */
 
 /*
- * Copyright (c) 2020 Tilen MAJERLE
+ * Copyright (c) 2023 Tilen MAJERLE
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,10 +29,10 @@
  * This file is part of LwSHELL - Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.1.1
+ * Version:         v1.2.0
  */
-#ifndef LWSHELL_HDR_OPT_H
-#define LWSHELL_HDR_OPT_H
+#ifndef LWSHELL_OPT_HDR_H
+#define LWSHELL_OPT_HDR_H
 
 /* Uncomment to ignore user options (or set macro in compiler flags) */
 /* #define LWSHELL_IGNORE_USER_OPTS */
@@ -53,11 +53,47 @@ extern "C" {
  */
 
 /**
- * \brief           Maximum number of different commands to be registered
- *
+ * \brief           Enables `1` or disables `0` dynamic command register with \ref lwshell_register_cmd or \ref lwshell_register_cmd_ex functions
+ * 
+ * \note            Set to `1` by default for backward compatibility
+ * \sa              LWSHELL_CFG_USE_STATIC_COMMANDS
+ */
+#ifndef LWSHELL_CFG_USE_DYNAMIC_COMMANDS
+#define LWSHELL_CFG_USE_DYNAMIC_COMMANDS 1
+#endif
+
+/**
+ * \brief           Enables `1` or disables `0` static command registration.
+ * 
+ * When enabled, a single register call is used where application
+ * can pass constant array of the commands and respective callback functions.
+ * 
+ * This allows RAM reduction as lookup tables can be stored in the non-volatile memory
+ * 
+ * \note            Set to `0` by default for backward compatibility
+ * \sa              LWSHELL_CFG_USE_DYNAMIC_COMMANDS
+ */
+#ifndef LWSHELL_CFG_USE_STATIC_COMMANDS
+#define LWSHELL_CFG_USE_STATIC_COMMANDS 0
+#endif
+
+/**
+ * \brief           Maximum number of different dynamic registered commands
+ * 
+ * \warning         Deprecated and replaced with \ref LWSHELL_CFG_MAX_DYNAMIC_CMDS
+ * \deprecated
  */
 #ifndef LWSHELL_CFG_MAX_CMDS
-#define LWSHELL_CFG_MAX_CMDS                    8
+#define LWSHELL_CFG_MAX_CMDS 8
+#endif
+
+/**
+ * \brief           Maximum number of different dynamic registered commands
+ *
+ * \note            Used only when \ref LWSHELL_CFG_USE_DYNAMIC_COMMANDS is enabled
+ */
+#ifndef LWSHELL_CFG_MAX_DYNAMIC_CMDS
+#define LWSHELL_CFG_MAX_DYNAMIC_CMDS LWSHELL_CFG_MAX_CMDS
 #endif
 
 /**
@@ -67,15 +103,16 @@ extern "C" {
  * Commands longer than this are automatically discarded
  */
 #ifndef LWSHELL_CFG_MAX_INPUT_LEN
-#define LWSHELL_CFG_MAX_INPUT_LEN               128
+#define LWSHELL_CFG_MAX_INPUT_LEN 128
 #endif
 
 /**
- * \brief           Maximum characters for command name
- *
+ * \brief           Maximum characters for command name in bytes.
+ * 
+ * \note            Used only when \ref LWSHELL_CFG_USE_DYNAMIC_COMMANDS is enabled
  */
 #ifndef LWSHELL_CFG_MAX_CMD_NAME_LEN
-#define LWSHELL_CFG_MAX_CMD_NAME_LEN            16
+#define LWSHELL_CFG_MAX_CMD_NAME_LEN 16
 #endif
 
 /**
@@ -84,7 +121,7 @@ extern "C" {
  * Number includes command name itself
  */
 #ifndef LWSHELL_CFG_MAX_CMD_ARGS
-#define LWSHELL_CFG_MAX_CMD_ARGS                8
+#define LWSHELL_CFG_MAX_CMD_ARGS 8
 #endif
 
 /**
@@ -94,7 +131,7 @@ extern "C" {
  * This is useful to give library feedback to user
  */
 #ifndef LWSHELL_CFG_USE_OUTPUT
-#define LWSHELL_CFG_USE_OUTPUT                  1
+#define LWSHELL_CFG_USE_OUTPUT 1
 #endif
 
 /**
@@ -102,8 +139,8 @@ extern "C" {
  *
  * \ref LWSHELL_CFG_USE_OUTPUT must be enabled to use this feature
  */
-#ifndef LWSHELL_CFG_USE_ENABLE_LIST_CMD
-#define LWSHELL_CFG_USE_ENABLE_LIST_CMD         0
+#ifndef LWSHELL_CFG_USE_LIST_CMD
+#define LWSHELL_CFG_USE_LIST_CMD 0
 #endif
 
 /**
@@ -114,4 +151,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif /* LWSHELL_HDR_OPT_H */
+#endif /* LWSHELL_OPT_HDR_H */

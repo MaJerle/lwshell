@@ -4,7 +4,7 @@
  */
 
 /*
- * Copyright (c) 2020 Tilen MAJERLE
+ * Copyright (c) 2023 Tilen MAJERLE
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,10 +29,10 @@
  * This file is part of LwSHELL - Lightweight shell library.
  *
  * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         v1.1.1
+ * Version:         v1.2.0
  */
-#ifndef LWSHELL_HDR_OPTS_H
-#define LWSHELL_HDR_OPTS_H
+#ifndef LWSHELL_OPTS_HDR_H
+#define LWSHELL_OPTS_HDR_H
 
 /* Rename this file to "lwshell_opts.h" for your application */
 
@@ -41,4 +41,4 @@
  * copy & replace here settings you want to change values
  */
 
-#endif /* LWSHELL_HDR_OPTS_H */
+#endif /* LWSHELL_OPTS_HDR_H */

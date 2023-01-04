@@ -6,7 +6,7 @@ int32_t
 mycmd_fn(int32_t argc, char** argv) {
     printf("mycmd_fn called. Number of argv: %d\r\n", (int)argc);
     for (int32_t i = 0; i < argc; ++i) {
-        printf("ARG[%d]: %s\r\n", (int)argc, argv[i]);
+        printf("ARG[%d]: %s\r\n", (int)i, argv[i]);
     }
 
     /* Successful execution */

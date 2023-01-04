@@ -1,6 +1,6 @@
 {
 	"name": "LwSHELL",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "Lightweight shell command line manager",
 	"keywords": "lwshell, cmd, command line, shell, manager, uart, usb, cdc, command, commands",
 	"repository": {
@@ -28,7 +28,8 @@
 			"docs",
 			"**/.vs",
 			"**/Debug",
-			"build"
+			"build",
+			"**/build"
 		]
 	}
 }
