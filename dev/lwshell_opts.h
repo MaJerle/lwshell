@@ -38,7 +38,7 @@
 
 #include "windows.h"
 
-#define LWSHELL_CFG_USE_OUTPUT           0
+#define LWSHELL_CFG_USE_OUTPUT           1
 #define LWSHELL_CFG_USE_LIST_CMD         1
 #define LWSHELL_CFG_USE_DYNAMIC_COMMANDS 1
 #define LWSHELL_CFG_USE_STATIC_COMMANDS  1
