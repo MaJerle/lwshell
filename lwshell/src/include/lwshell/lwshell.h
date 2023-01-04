@@ -95,19 +95,31 @@ typedef struct {
  * \brief           LwSHELL main structure
  */
 typedef struct lwshell {
+#if LWSHELL_CFG_USE_OUTPUT || __DOXYGEN__
     lwshell_output_fn out_fn;                 /*!< Optional output function */
+#endif                                        /* LWSHELL_CFG_USE_OUTPUT || __DOXYGEN__ */
     char buff[LWSHELL_CFG_MAX_INPUT_LEN + 1]; /*!< Shell command input buffer */
     size_t buff_ptr;                          /*!< Buffer pointer for input */
     int32_t argc;                             /*!< Number of arguments parsed in command */
-    char* argv[LWSHELL_CFG_MAX_CMD_ARGS];     /*!< Array of all arguments */
-    lwshell_cmd_t cmds[LWSHELL_CFG_MAX_CMDS]; /*!< Shell registered commands */
-    size_t cmds_cnt;                          /*!< Number of registered commands */
+    char* argv[LWSHELL_CFG_MAX_CMD_ARGS];     /*!< Array of pointers to all arguments */
+
+#if LWSHELL_CFG_USE_DYNAMIC_COMMANDS || __DOXYGEN__
+    lwshell_cmd_t dynamic_cmds[LWSHELL_CFG_MAX_DYNAMIC_CMDS]; /*!< Shell registered dynamic commands */
+    size_t dynamic_cmds_cnt;                                  /*!< Number of registered dynamic commands */
+#endif                                                        /* LWSHELL_CFG_USE_DYNAMIC_COMMANDS || __DOXYGEN__ */
+
+#if LWSHELL_CFG_USE_STATIC_COMMANDS || __DOXYGEN__
+    const lwshell_cmd_t* static_cmds; /*!< Pointer to an array of static commands */
+    size_t static_cmds_cnt;           /*!< Length of status commands array */
+#endif                                /* LWSHELL_CFG_USE_STATIC_COMMANDS || __DOXYGEN__ */
 } lwshell_t;
 
 lwshellr_t lwshell_init_ex(lwshell_t* lwobj);
 lwshellr_t lwshell_set_output_fn_ex(lwshell_t* lwobj, lwshell_output_fn out_fn);
 lwshellr_t lwshell_register_cmd_ex(lwshell_t* lwobj, const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc);
 lwshellr_t lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len);
+
+lwshellr_t lwshell_register_static_cmds_ex(lwshell_t* lwobj, const lwshell_cmd_t* cmds, size_t cmds_len);
 
 /**
  * \brief           Initialize shell interface
@@ -132,6 +144,7 @@ lwshellr_t lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len);
  * \param[in]       cmd_fn: Function to call on command match
  * \param[in]       desc: Custom command description
  * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ * \note            Available only when \ref LWSHELL_CFG_USE_DYNAMIC_COMMANDS is enabled
  */
 #define lwshell_register_cmd(cmd_name, cmd_fn, desc) lwshell_register_cmd_ex(NULL, (cmd_name), (cmd_fn), (desc))
 
@@ -143,6 +156,16 @@ lwshellr_t lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len);
  * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
  */
 #define lwshell_input(in_data, len)                  lwshell_input_ex(NULL, (in_data), (len))
+
+/**
+ * \brief           Register new command to shell
+ * \note            It applies to default shell instance
+ * \param[in]       cmds: Array of const static commands. It can be from non-volatile memory
+ * \param[in]       cmds_len: Length of array elements
+ * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ * \note            Available only when \ref LWSHELL_CFG_USE_STATIC_COMMANDS is enabled
+ */
+#define lwshell_register_static_cmds(cmds, cmds_len) lwshell_register_static_cmds_ex(NULL, (cmds), (cmds_len))
 
 /**
  * \brief           Parse input string as `integer`

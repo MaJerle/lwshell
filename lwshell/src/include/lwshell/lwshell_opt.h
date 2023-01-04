@@ -53,11 +53,47 @@ extern "C" {
  */
 
 /**
- * \brief           Maximum number of different commands to be registered
- *
+ * \brief           Enables `1` or disables `0` dynamic command register with \ref lwshell_register_cmd or \ref lwshell_register_cmd_ex functions
+ * 
+ * \note            Set to `1` by default for backward compatibility
+ * \sa              LWSHELL_CFG_USE_STATIC_COMMANDS
+ */
+#ifndef LWSHELL_CFG_USE_DYNAMIC_COMMANDS
+#define LWSHELL_CFG_USE_DYNAMIC_COMMANDS 1
+#endif
+
+/**
+ * \brief           Enables `1` or disables `0` static command registration.
+ * 
+ * When enabled, a single register call is used where application
+ * can pass constant array of the commands and respective callback functions.
+ * 
+ * This allows RAM reduction as lookup tables can be stored in the non-volatile memory
+ * 
+ * \note            Set to `0` by default for backward compatibility
+ * \sa              LWSHELL_CFG_USE_DYNAMIC_COMMANDS
+ */
+#ifndef LWSHELL_CFG_USE_STATIC_COMMANDS
+#define LWSHELL_CFG_USE_STATIC_COMMANDS 0
+#endif
+
+/**
+ * \brief           Maximum number of different dynamic registered commands
+ * 
+ * \warning         Deprecated and replaced with \ref LWSHELL_CFG_MAX_DYNAMIC_CMDS
+ * \deprecated
  */
 #ifndef LWSHELL_CFG_MAX_CMDS
 #define LWSHELL_CFG_MAX_CMDS 8
+#endif
+
+/**
+ * \brief           Maximum number of different dynamic registered commands
+ *
+ * \note            Used only when \ref LWSHELL_CFG_USE_DYNAMIC_COMMANDS is enabled
+ */
+#ifndef LWSHELL_CFG_MAX_DYNAMIC_CMDS
+#define LWSHELL_CFG_MAX_DYNAMIC_CMDS LWSHELL_CFG_MAX_CMDS
 #endif
 
 /**
@@ -71,8 +107,9 @@ extern "C" {
 #endif
 
 /**
- * \brief           Maximum characters for command name
- *
+ * \brief           Maximum characters for command name in bytes.
+ * 
+ * \note            Used only when \ref LWSHELL_CFG_USE_DYNAMIC_COMMANDS is enabled
  */
 #ifndef LWSHELL_CFG_MAX_CMD_NAME_LEN
 #define LWSHELL_CFG_MAX_CMD_NAME_LEN 16
@@ -102,8 +139,8 @@ extern "C" {
  *
  * \ref LWSHELL_CFG_USE_OUTPUT must be enabled to use this feature
  */
-#ifndef LWSHELL_CFG_USE_ENABLE_LIST_CMD
-#define LWSHELL_CFG_USE_ENABLE_LIST_CMD 0
+#ifndef LWSHELL_CFG_USE_LIST_CMD
+#define LWSHELL_CFG_USE_LIST_CMD 0
 #endif
 
 /**

@@ -35,9 +35,12 @@
 #include "lwshell/lwshell.h"
 
 /* Check enabled features */
-#if LWSHELL_CFG_USE_ENABLE_LIST_CMD && !LWSHELL_CFG_USE_OUTPUT
+#if LWSHELL_CFG_USE_LIST_CMD && !LWSHELL_CFG_USE_OUTPUT
 #error "To use list command feature, LWSHELL_CFG_USE_OUTPUT must be enabled"
-#endif
+#endif /* LWSHELL_CFG_USE_LIST_CMD && !LWSHELL_CFG_USE_OUTPUT */
+#if !LWSHELL_CFG_USE_DYNAMIC_COMMANDS && !LWSHELL_CFG_USE_STATIC_COMMANDS
+#error "At least one of LWSHELL_CFG_USE_DYNAMIC_COMMANDS or !LWSHELL_CFG_USE_STATIC_COMMANDS must be enabled"
+#endif /* !LWSHELL_CFG_USE_DYNAMIC_COMMANDS && !LWSHELL_CFG_USE_STATIC_COMMANDS */
 
 /* Default characters */
 #define LWSHELL_ASCII_NULL      0x00 /*!< Null character */
@@ -67,7 +70,7 @@ static lwshell_t shell;
 /* Add character to instance */
 #define LWSHELL_ADD_CH(lwobj, ch)                                                                                      \
     do {                                                                                                               \
-        if ((lwobj)->buff_ptr < (LWSHELL_ARRAYSIZE(lwobj->buff) - 1)) {                                                \
+        if ((lwobj)->buff_ptr < (LWSHELL_ARRAYSIZE((lwobj)->buff) - 1)) {                                              \
             (lwobj)->buff[(lwobj)->buff_ptr] = ch;                                                                     \
             (lwobj)->buff[++(lwobj)->buff_ptr] = '\0';                                                                 \
         }                                                                                                              \
@@ -91,7 +94,8 @@ prv_parse_input(lwshell_t* lwobj) {
     char* str;
 
     /* Check string length and compare with buffer pointer */
-    if ((s_len = strlen(lwobj->buff)) != lwobj->buff_ptr) {
+    s_len = strlen(lwobj->buff);
+    if (s_len != lwobj->buff_ptr) {
         return;
     }
 
@@ -153,18 +157,35 @@ prv_parse_input(lwshell_t* lwobj) {
         }
 
         /* Check for command */
-        if (lwobj->argc > 0 && lwobj->cmds_cnt > 0) {
-            lwshell_cmd_t* c = NULL;
+        if (lwobj->argc > 0) {
+            const lwshell_cmd_t* c = NULL;
             size_t arg_len = strlen(lwobj->argv[0]);
 
-            /* Process all commands */
-            for (size_t i = 0; i < lwobj->cmds_cnt; ++i) {
-                if (arg_len == strlen(lwobj->cmds[i].name)
-                    && strncmp(lwobj->cmds[i].name, lwobj->argv[0], arg_len) == 0) {
-                    c = &lwobj->cmds[i];
-                    break;
+#if LWSHELL_CFG_USE_DYNAMIC_COMMANDS
+            /* Process all dynamic commands */
+            if (c == NULL && lwobj->dynamic_cmds_cnt > 0) {
+                for (size_t i = 0; i < lwobj->dynamic_cmds_cnt; ++i) {
+                    if (arg_len == strlen(lwobj->dynamic_cmds[i].name)
+                        && strncmp(lwobj->dynamic_cmds[i].name, lwobj->argv[0], arg_len) == 0) {
+                        c = &lwobj->dynamic_cmds[i];
+                        break;
+                    }
                 }
             }
+#endif /* LWSHELL_CFG_USE_DYNAMIC_COMMANDS */
+
+#if LWSHELL_CFG_USE_STATIC_COMMANDS
+            /* Process all static commands */
+            if (c == NULL && lwobj->static_cmds != NULL && lwobj->static_cmds_cnt > 0) {
+                for (size_t i = 0; i < lwobj->static_cmds_cnt; ++i) {
+                    if (arg_len == strlen(lwobj->static_cmds[i].name)
+                        && strncmp(lwobj->static_cmds[i].name, lwobj->argv[0], arg_len) == 0) {
+                        c = &lwobj->static_cmds[i];
+                        break;
+                    }
+                }
+            }
+#endif /* LWSHELL_CFG_USE_STATIC_COMMANDS */
 
             /* Valid command ready? */
             if (c != NULL) {
@@ -176,16 +197,26 @@ prv_parse_input(lwshell_t* lwobj) {
                 } else {
                     c->fn(lwobj->argc, lwobj->argv);
                 }
-#if LWSHELL_CFG_USE_ENABLE_LIST_CMD
+#if LWSHELL_CFG_USE_LIST_CMD
             } else if (strncmp(lwobj->argv[0], "listcmd", 7) == 0) {
                 LWSHELL_OUTPUT(lwobj, "List of registered commands\r\n");
-                for (size_t i = 0; i < lwobj->cmds_cnt; ++i) {
-                    LWSHELL_OUTPUT(lwobj, lwobj->cmds[i].name);
+#if LWSHELL_CFG_USE_DYNAMIC_COMMANDS
+                for (size_t i = 0; i < lwobj->dynamic_cmds_cnt; ++i) {
+                    LWSHELL_OUTPUT(lwobj, lwobj->dynamic_cmds[i].name);
                     LWSHELL_OUTPUT(lwobj, "\t\t\t");
-                    LWSHELL_OUTPUT(lwobj, lwobj->cmds[i].desc);
+                    LWSHELL_OUTPUT(lwobj, lwobj->dynamic_cmds[i].desc);
                     LWSHELL_OUTPUT(lwobj, "\r\n");
                 }
-#endif /* LWSHELL_CFG_USE_ENABLE_LIST_CMD */
+#endif /* LWSHELL_CFG_USE_DYNAMIC_COMMANDS */
+#if LWSHELL_CFG_USE_STATIC_COMMANDS
+                for (size_t i = 0; i < lwobj->static_cmds_cnt; ++i) {
+                    LWSHELL_OUTPUT(lwobj, lwobj->static_cmds[i].name);
+                    LWSHELL_OUTPUT(lwobj, "\t\t\t");
+                    LWSHELL_OUTPUT(lwobj, lwobj->static_cmds[i].desc);
+                    LWSHELL_OUTPUT(lwobj, "\r\n");
+                }
+#endif /* LWSHELL_CFG_USE_STATIC_COMMANDS */
+#endif /* LWSHELL_CFG_USE_LIST_CMD */
             } else {
                 LWSHELL_OUTPUT(lwobj, "Unknown command\r\n");
             }
@@ -223,6 +254,8 @@ lwshell_set_output_fn_ex(lwshell_t* lwobj, lwshell_output_fn out_fn) {
 
 #endif /* LWSHELL_CFG_USE_OUTPUT || __DOXYGEN__ */
 
+#if LWSHELL_CFG_USE_DYNAMIC_COMMANDS || __DOXYGEN__
+
 /**
  * \brief           Register new command to shell
  * \param[in]       lwobj: LwSHELL object instance. Set to `NULL` to use default one
@@ -230,6 +263,7 @@ lwshell_set_output_fn_ex(lwshell_t* lwobj, lwshell_output_fn out_fn) {
  * \param[in]       cmd_fn: Function to call on command match
  * \param[in]       desc: Custom command description
  * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ * \note            Available only when \ref LWSHELL_CFG_USE_DYNAMIC_COMMANDS is enabled
  */
 lwshellr_t
 lwshell_register_cmd_ex(lwshell_t* lwobj, const char* cmd_name, lwshell_cmd_fn cmd_fn, const char* desc) {
@@ -240,16 +274,38 @@ lwshell_register_cmd_ex(lwshell_t* lwobj, const char* cmd_name, lwshell_cmd_fn c
     }
 
     /* Check for memory available */
-    if (lwobj->cmds_cnt < LWSHELL_ARRAYSIZE(lwobj->cmds)) {
-        lwobj->cmds[lwobj->cmds_cnt].name = cmd_name;
-        lwobj->cmds[lwobj->cmds_cnt].fn = cmd_fn;
-        lwobj->cmds[lwobj->cmds_cnt].desc = desc;
+    if (lwobj->dynamic_cmds_cnt < LWSHELL_ARRAYSIZE(lwobj->dynamic_cmds)) {
+        lwobj->dynamic_cmds[lwobj->dynamic_cmds_cnt].name = cmd_name;
+        lwobj->dynamic_cmds[lwobj->dynamic_cmds_cnt].fn = cmd_fn;
+        lwobj->dynamic_cmds[lwobj->dynamic_cmds_cnt].desc = desc;
 
-        ++lwobj->cmds_cnt;
+        ++lwobj->dynamic_cmds_cnt;
         return lwshellOK;
     }
     return lwshellERRMEM;
 }
+
+#endif /* LWSHELL_CFG_USE_DYNAMIC_COMMANDS || __DOXYGEN__ */
+
+#if LWSHELL_CFG_USE_STATIC_COMMANDS || __DOXYGEN__
+
+/**
+ * \brief           Register new command to shell
+ * \param[in]       lwobj: LwSHELL object instance. Set to `NULL` to use default one
+ * \param[in]       cmds: Array of const static commands. It can be from non-volatile memory.
+ * \param[in]       cmds_len: Length of array elements
+ * \return          \ref lwshellOK on success, member of \ref lwshellr_t otherwise
+ * \note            Available only when \ref LWSHELL_CFG_USE_STATIC_COMMANDS is enabled
+ */
+lwshellr_t
+lwshell_register_static_cmds_ex(lwshell_t* lwobj, const lwshell_cmd_t* cmds, size_t cmds_len) {
+    lwobj = LWSHELL_GET_LWOBJ(lwobj);
+    lwobj->static_cmds = cmds;
+    lwobj->static_cmds_cnt = cmds_len;
+    return lwshellOK;
+}
+
+#endif /* LWSHELL_CFG_USE_STATIC_COMMANDS || __DOXYGEN__ */
 
 /**
  * \brief           Input data to shell processing
@@ -261,7 +317,7 @@ lwshell_register_cmd_ex(lwshell_t* lwobj, const char* cmd_name, lwshell_cmd_fn c
 lwshellr_t
 lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len) {
     const char* d = in_data;
-    lwobj = LWSHELL_GET_LWOBJ(NULL);
+    lwobj = LWSHELL_GET_LWOBJ(lwobj);
 
     if (in_data == NULL || len == 0) {
         return lwshellERRPAR;
