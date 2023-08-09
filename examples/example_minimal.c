@@ -16,7 +16,7 @@ mycmd_fn(int32_t argc, char** argv) {
 /* Example code */
 void
 example_minimal(void) {
-    const char* input_str = "mycmd param1 \"param 2 with space\"";
+    const char* input_str = "mycmd param1 \"param 2 with space\"\r\n";
 
     /* Init library */
     lwshell_init();
