@@ -53,6 +53,24 @@ extern "C" {
  */
 
 /**
+ * \brief           Memory set function
+ * 
+ * \note            Function footprint is the same as \ref memset
+ */
+#ifndef LWSHELL_MEMSET
+#define LWSHELL_MEMSET(dst, val, len) memset((dst), (val), (len))
+#endif
+
+/**
+ * \brief           Memory copy function
+ * 
+ * \note            Function footprint is the same as \ref memcpy
+ */
+#ifndef LWSHELL_MEMCPY
+#define LWSHELL_MEMCPY(dst, src, len) memcpy((dst), (src), (len))
+#endif
+
+/**
  * \brief           Enables `1` or disables `0` dynamic command register with \ref lwshell_register_cmd or \ref lwshell_register_cmd_ex functions
  * 
  * \note            Set to `1` by default for backward compatibility

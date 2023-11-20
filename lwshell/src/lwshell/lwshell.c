@@ -79,8 +79,8 @@ static lwshell_t shell;
 /* Reset buffers */
 #define LWSHELL_RESET_BUFF(lwobj)                                                                                      \
     do {                                                                                                               \
-        memset((lwobj)->buff, 0x00, sizeof((lwobj)->buff));                                                            \
-        memset((lwobj)->argv, 0x00, sizeof((lwobj)->argv));                                                            \
+        LWSHELL_MEMSET((lwobj)->buff, 0x00, sizeof((lwobj)->buff));                                                    \
+        LWSHELL_MEMSET((lwobj)->argv, 0x00, sizeof((lwobj)->argv));                                                    \
         (lwobj)->buff_ptr = 0;                                                                                         \
     } while (0)
 
@@ -158,16 +158,16 @@ prv_parse_input(lwshell_t* lwobj) {
 
         /* Check for command */
         if (lwobj->argc > 0) {
-            const lwshell_cmd_t* c = NULL;
+            const lwshell_cmd_t* ccmd = NULL;
             size_t arg_len = strlen(lwobj->argv[0]);
 
 #if LWSHELL_CFG_USE_DYNAMIC_COMMANDS
             /* Process all dynamic commands */
-            if (c == NULL && lwobj->dynamic_cmds_cnt > 0) {
-                for (size_t i = 0; i < lwobj->dynamic_cmds_cnt; ++i) {
-                    if (arg_len == strlen(lwobj->dynamic_cmds[i].name)
-                        && strncmp(lwobj->dynamic_cmds[i].name, lwobj->argv[0], arg_len) == 0) {
-                        c = &lwobj->dynamic_cmds[i];
+            if (ccmd == NULL && lwobj->dynamic_cmds_cnt > 0) {
+                for (size_t idx = 0; idx < lwobj->dynamic_cmds_cnt; ++idx) {
+                    if (arg_len == strlen(lwobj->dynamic_cmds[idx].name)
+                        && strncmp(lwobj->dynamic_cmds[idx].name, lwobj->argv[0], arg_len) == 0) {
+                        ccmd = &lwobj->dynamic_cmds[idx];
                         break;
                     }
                 }
@@ -176,11 +176,11 @@ prv_parse_input(lwshell_t* lwobj) {
 
 #if LWSHELL_CFG_USE_STATIC_COMMANDS
             /* Process all static commands */
-            if (c == NULL && lwobj->static_cmds != NULL && lwobj->static_cmds_cnt > 0) {
-                for (size_t i = 0; i < lwobj->static_cmds_cnt; ++i) {
-                    if (arg_len == strlen(lwobj->static_cmds[i].name)
-                        && strncmp(lwobj->static_cmds[i].name, lwobj->argv[0], arg_len) == 0) {
-                        c = &lwobj->static_cmds[i];
+            if (ccmd == NULL && lwobj->static_cmds != NULL && lwobj->static_cmds_cnt > 0) {
+                for (size_t idx = 0; idx < lwobj->static_cmds_cnt; ++idx) {
+                    if (arg_len == strlen(lwobj->static_cmds[idx].name)
+                        && strncmp(lwobj->static_cmds[idx].name, lwobj->argv[0], arg_len) == 0) {
+                        ccmd = &lwobj->static_cmds[idx];
                         break;
                     }
                 }
@@ -188,31 +188,31 @@ prv_parse_input(lwshell_t* lwobj) {
 #endif /* LWSHELL_CFG_USE_STATIC_COMMANDS */
 
             /* Valid command ready? */
-            if (c != NULL) {
-                if (lwobj->argc == 2 && lwobj->argv[1][0] == '-' && lwobj->argv[1][1] == 'h'
+            if (ccmd != NULL) {
+                if (lwobj->argc == 2U && lwobj->argv[1][0] == '-' && lwobj->argv[1][1] == 'h'
                     && lwobj->argv[1][2] == '\0') {
                     /* Here we can print version */
-                    LWSHELL_OUTPUT(lwobj, c->desc);
+                    LWSHELL_OUTPUT(lwobj, ccmd->desc);
                     LWSHELL_OUTPUT(lwobj, "\r\n");
                 } else {
-                    c->fn(lwobj->argc, lwobj->argv);
+                    ccmd->fn(lwobj->argc, lwobj->argv);
                 }
 #if LWSHELL_CFG_USE_LIST_CMD
-            } else if (strncmp(lwobj->argv[0], "listcmd", 7) == 0) {
+            } else if (strncmp(lwobj->argv[0], "listcmd", 7U) == 0) {
                 LWSHELL_OUTPUT(lwobj, "List of registered commands\r\n");
 #if LWSHELL_CFG_USE_DYNAMIC_COMMANDS
-                for (size_t i = 0; i < lwobj->dynamic_cmds_cnt; ++i) {
-                    LWSHELL_OUTPUT(lwobj, lwobj->dynamic_cmds[i].name);
+                for (size_t idx = 0; idx < lwobj->dynamic_cmds_cnt; ++idx) {
+                    LWSHELL_OUTPUT(lwobj, lwobj->dynamic_cmds[idx].name);
                     LWSHELL_OUTPUT(lwobj, "\t\t\t");
-                    LWSHELL_OUTPUT(lwobj, lwobj->dynamic_cmds[i].desc);
+                    LWSHELL_OUTPUT(lwobj, lwobj->dynamic_cmds[idx].desc);
                     LWSHELL_OUTPUT(lwobj, "\r\n");
                 }
 #endif /* LWSHELL_CFG_USE_DYNAMIC_COMMANDS */
 #if LWSHELL_CFG_USE_STATIC_COMMANDS
-                for (size_t i = 0; i < lwobj->static_cmds_cnt; ++i) {
-                    LWSHELL_OUTPUT(lwobj, lwobj->static_cmds[i].name);
+                for (size_t idx = 0; idx < lwobj->static_cmds_cnt; ++idx) {
+                    LWSHELL_OUTPUT(lwobj, lwobj->static_cmds[idx].name);
                     LWSHELL_OUTPUT(lwobj, "\t\t\t");
-                    LWSHELL_OUTPUT(lwobj, lwobj->static_cmds[i].desc);
+                    LWSHELL_OUTPUT(lwobj, lwobj->static_cmds[idx].desc);
                     LWSHELL_OUTPUT(lwobj, "\r\n");
                 }
 #endif /* LWSHELL_CFG_USE_STATIC_COMMANDS */
@@ -232,7 +232,7 @@ prv_parse_input(lwshell_t* lwobj) {
 lwshellr_t
 lwshell_init_ex(lwshell_t* lwobj) {
     lwobj = LWSHELL_GET_LWOBJ(NULL);
-    memset(lwobj, 0x00, sizeof(*lwobj));
+    LWSHELL_MEMSET(lwobj, 0x00, sizeof(*lwobj));
     return lwshellOK;
 }
 
@@ -316,7 +316,7 @@ lwshell_register_static_cmds_ex(lwshell_t* lwobj, const lwshell_cmd_t* cmds, siz
  */
 lwshellr_t
 lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len) {
-    const char* d = in_data;
+    const char* p_data = in_data;
     lwobj = LWSHELL_GET_LWOBJ(lwobj);
 
     if (in_data == NULL || len == 0) {
@@ -324,8 +324,8 @@ lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len) {
     }
 
     /* Process all bytes */
-    for (size_t i = 0; i < len; ++i) {
-        switch (d[i]) {
+    for (size_t idx = 0; idx < len; ++idx) {
+        switch (p_data[idx]) {
             case LWSHELL_ASCII_CR: {
                 LWSHELL_OUTPUT(lwobj, "\r");
                 prv_parse_input(lwobj);
@@ -348,10 +348,10 @@ lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len) {
                 break;
             }
             default: {
-                char str[2] = {d[i]};
+                char str[2] = {p_data[idx], 0};
                 LWSHELL_OUTPUT(lwobj, str);
-                if (d[i] >= 0x20 && d[i] < 0x7F) {
-                    LWSHELL_ADD_CH(lwobj, d[i]);
+                if (p_data[idx] >= 0x20U && p_data[idx] < 0x7FU) {
+                    LWSHELL_ADD_CH(lwobj, p_data[idx]);
                 }
             }
         }
