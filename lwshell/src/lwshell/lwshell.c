@@ -350,7 +350,7 @@ lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len) {
             default: {
                 char str[2] = {p_data[idx], 0};
                 LWSHELL_OUTPUT(lwobj, str);
-                if (p_data[idx] >= 0x20U && p_data[idx] < 0x7FU) {
+                if (p_data[idx] >= 0x20 && p_data[idx] < 0x7F) {
                     LWSHELL_ADD_CH(lwobj, p_data[idx]);
                 }
             }
