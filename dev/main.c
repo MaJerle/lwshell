@@ -4,7 +4,7 @@
 #include "lwshell/lwshell.h"
 
 /**
- * \brief           Reading one character at a time 
+ * \brief           Reading one character at a time
  *
  * This is useful to test the shell in a "raw" mode (non-canonical input)
  * Please note that conio.h is a windows only header

@@ -93,7 +93,7 @@ prv_parse_input(lwshell_t* lwobj) {
     size_t s_len;
     char* str;
 
-    /* 
+    /*
      * Check string length and compare with buffer pointer
      * Must be more than `1` character since we have to include end of line
      */
@@ -220,8 +220,8 @@ prv_parse_input(lwshell_t* lwobj) {
 #endif /* LWSHELL_CFG_USE_LIST_CMD */
         } else {
             LWSHELL_OUTPUT(lwobj, LWSHELL_CFG_USE_LIST_CMD
-                                      ? "Unknown command, use listcmd to list available commands\r\n"
-                                      : "Unknown command\r\n");
+                           ? "Unknown command, use listcmd to list available commands\r\n"
+                           : "Unknown command\r\n");
         }
     }
 }
