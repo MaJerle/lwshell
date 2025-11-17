@@ -54,7 +54,7 @@ extern "C" {
 
 /**
  * \brief           Memory set function
- * 
+ *
  * \note            Function footprint is the same as \ref memset
  */
 #ifndef LWSHELL_MEMSET
@@ -63,7 +63,7 @@ extern "C" {
 
 /**
  * \brief           Memory copy function
- * 
+ *
  * \note            Function footprint is the same as \ref memcpy
  */
 #ifndef LWSHELL_MEMCPY
@@ -72,7 +72,7 @@ extern "C" {
 
 /**
  * \brief           Enables `1` or disables `0` dynamic command register with \ref lwshell_register_cmd or \ref lwshell_register_cmd_ex functions
- * 
+ *
  * \note            Set to `1` by default for backward compatibility
  * \sa              LWSHELL_CFG_USE_STATIC_COMMANDS
  */
@@ -82,12 +82,12 @@ extern "C" {
 
 /**
  * \brief           Enables `1` or disables `0` static command registration.
- * 
+ *
  * When enabled, a single register call is used where application
  * can pass constant array of the commands and respective callback functions.
- * 
+ *
  * This allows RAM reduction as lookup tables can be stored in the non-volatile memory
- * 
+ *
  * \note            Set to `0` by default for backward compatibility
  * \sa              LWSHELL_CFG_USE_DYNAMIC_COMMANDS
  */
@@ -97,7 +97,7 @@ extern "C" {
 
 /**
  * \brief           Maximum number of different dynamic registered commands
- * 
+ *
  * \warning         Deprecated and replaced with \ref LWSHELL_CFG_MAX_DYNAMIC_CMDS
  * \deprecated
  */
@@ -126,7 +126,7 @@ extern "C" {
 
 /**
  * \brief           Maximum characters for command name in bytes.
- * 
+ *
  * \note            Used only when \ref LWSHELL_CFG_USE_DYNAMIC_COMMANDS is enabled
  */
 #ifndef LWSHELL_CFG_MAX_CMD_NAME_LEN

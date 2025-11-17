@@ -11,40 +11,40 @@ static const test_str_t commands[] = {
     {
         .command = "test 123 456 789\n",
         .args_list =
-            {
-                "test",
-                "123",
-                "456",
-                "789",
-            },
+        {
+            "test",
+            "123",
+            "456",
+            "789",
+        },
     },
     {
         .command = "test 123 longer text\n",
         .args_list =
-            {
-                "test",
-                "123",
-                "longer",
-                "text",
-            },
+        {
+            "test",
+            "123",
+            "longer",
+            "text",
+        },
     },
     {
         .command = "test 123 \"longer text\"\n",
         .args_list =
-            {
-                "test",
-                "123",
-                "longer text",
-            },
+        {
+            "test",
+            "123",
+            "longer text",
+        },
     },
     {
         .command = "test 123 \"longer text with \\\" quotes\"\n",
         .args_list =
-            {
-                "test",
-                "123",
-                "longer text with \\\" quotes",
-            },
+        {
+            "test",
+            "123",
+            "longer text with \\\" quotes",
+        },
     },
 };
 static uint32_t current_cmd_index;
@@ -52,10 +52,10 @@ static int failed = 0;
 
 /**
  * \brief           Test command function
- * 
- * \param           argc 
- * \param           argv 
- * \return          int32_t 
+ *
+ * \param           argc
+ * \param           argv
+ * \return          int32_t
  */
 int32_t
 prv_test_cmd(int32_t argc, char** argv) {
@@ -87,7 +87,7 @@ prv_test_cmd(int32_t argc, char** argv) {
 
 /**
  * \brief           Global test run function
- * 
+ *
  */
 int
 run_test(void) {
