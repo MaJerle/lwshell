@@ -91,7 +91,7 @@ prv_test_cmd(int32_t argc, char** argv) {
  * 
  */
 int
-run_test(void) {
+test_run(void) {
     failed = 0;
 
     printf("Running test...\r\n");
