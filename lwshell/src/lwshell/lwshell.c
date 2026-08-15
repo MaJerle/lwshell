@@ -335,7 +335,8 @@ lwshell_input_ex(lwshell_t* lwobj, const void* in_data, size_t len) {
                 LWSHELL_RESET_BUFF(lwobj);
                 break;
             }
-            case LWSHELL_ASCII_BACKSPACE: {
+            case LWSHELL_ASCII_BACKSPACE:
+            case LWSHELL_ASCII_DEL: {
                 /* Try to delete character from buffer */
                 if (lwobj->buff_ptr > 0) {
                     --lwobj->buff_ptr;
