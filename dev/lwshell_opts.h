@@ -36,8 +36,6 @@
 
 /* Rename this file to "lwshell_opts.h" for your application */
 
-#include "windows.h"
-
 #define LWSHELL_CFG_USE_OUTPUT           1
 #define LWSHELL_CFG_USE_LIST_CMD         1
 #define LWSHELL_CFG_USE_DYNAMIC_COMMANDS 1
