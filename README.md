@@ -3,7 +3,7 @@
 LwSHELL is lightweight, platform independent, command line shell for embedded systems.
 It targets communication with embedded systems from remote terminal to quickly send commands and to retrieve data from the device.
 
-<h3>Read first: <a href="https://docs.majerle.eu/projects/lwshell/">Documentation</a></h3>
+[Open documentation](https://docs.majerle.eu/projects/lwshell/)
 
 ## Features
 
