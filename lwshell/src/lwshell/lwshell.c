@@ -4,7 +4,7 @@
  */
 
 /*
- * Copyright (c) 2024 Tilen MAJERLE
+ * Copyright (c) 2026 Tilen MAJERLE
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -219,9 +219,9 @@ prv_parse_input(lwshell_t* lwobj) {
 #endif /* LWSHELL_CFG_USE_STATIC_COMMANDS */
 #endif /* LWSHELL_CFG_USE_LIST_CMD */
         } else {
-            LWSHELL_OUTPUT(lwobj, LWSHELL_CFG_USE_LIST_CMD
-                                      ? "Unknown command, use listcmd to list available commands\r\n"
-                                      : "Unknown command\r\n");
+            LWSHELL_OUTPUT(lwobj, LWSHELL_CFG_USE_LIST_CMD ? "Unknown command, use listcmd to list available "
+                                                             "commands\r\n"
+                                                           : "Unknown command\r\n");
         }
     }
 }
