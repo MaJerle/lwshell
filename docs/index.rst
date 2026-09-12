@@ -16,11 +16,11 @@ LwSHELL is lightweight dynamic memory manager optimized for embedded systems.
 Features
 ^^^^^^^^
 
+* Written in C (C11), compatible with ``stdint.h`` data types
 * Lightweight commands shell for embedded systems
 * Platform independent and very easy to port
 
-    * Development of library under Win32 platform
-* Written in C language (C99)
+
 * No dynamic allocation, maximum number of commands assigned at compile time
 * Highly configurable
 * Simple help-text with `cmd -v` option
